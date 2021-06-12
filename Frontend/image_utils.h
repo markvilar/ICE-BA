@@ -19,18 +19,17 @@
 #include <opencv2/core.hpp>
 #include <vector>
 
-namespace XP {
+namespace XP
+{
 
 int sampleBrightnessHistogram(const cv::Mat& raw_img,
-                              std::vector<int>* histogram,
-                              int* avg_pixel_val_ptr = nullptr);
+    std::vector<int>* histogram, int* avg_pixel_val_ptr = nullptr);
 
 float matchingHistogram(const std::vector<int>& hist_src,
-                        const std::vector<int>& hist_tgt,
-                        const float init_scale);
+    const std::vector<int>& hist_tgt, const float init_scale);
 
 void drawHistogram(cv::Mat* img_hist, const std::vector<int>& histogram);
 
-}  // namespace XP
+} // namespace XP
 
-#endif  // XP_INCLUDE_XP_UTIL_IMAGE_UTILS_H_
+#endif // XP_INCLUDE_XP_UTIL_IMAGE_UTILS_H_

@@ -16,18 +16,20 @@
 #ifndef XP_INCLUDE_XP_HELPER_IBA_HELPER_H_
 #define XP_INCLUDE_XP_HELPER_IBA_HELPER_H_
 
+#include "basic_datatype.h" // for ImuData
 #include "param.h"
-#include "basic_datatype.h"  // for ImuData
 #include <IBA_datatype.h>
 
-namespace XP {
+namespace XP
+{
 
 // Helper functions to convert from DuoCalibParam to IBA::Calibration
 IBA::Calibration to_iba_calibration(const DuoCalibParam& calib);
 
-IBA::Intrinsic to_iba_intrinsic(const DuoCalibParam::Camera_t& cam, const int lr);
+IBA::Intrinsic to_iba_intrinsic(
+    const DuoCalibParam::Camera_t& cam, const int lr);
 
 IBA::IMUMeasurement to_iba_imu(const ImuData& imu_in);
 
-}  // namespace XP
-#endif  // XP_INCLUDE_XP_HELPER_IBA_HELPER_H_
+} // namespace XP
+#endif // XP_INCLUDE_XP_HELPER_IBA_HELPER_H_

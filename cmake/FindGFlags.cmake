@@ -427,8 +427,6 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Gflags DEFAULT_MSG
 
 # Only mark internal variables as advanced if we found gflags, otherwise
 # leave them visible in the standard GUI for the user to set manually.
-IF (GFLAGS_FOUND)
-  MARK_AS_ADVANCED(FORCE GFLAGS_INCLUDE_DIR
-                         GFLAGS_LIBRARY
-                         GFLAGS_NAMESPACE)
-ENDIF (GFLAGS_FOUND)
+if(GFLAGS_FOUND)
+	MARK_AS_ADVANCED(FORCE GFLAGS_INCLUDE_DIR GFLAGS_LIBRARY GFLAGS_NAMESPACE)
+endif(GFLAGS_FOUND)

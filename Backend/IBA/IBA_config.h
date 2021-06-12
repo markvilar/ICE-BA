@@ -46,28 +46,28 @@ typedef float PCG_TYPE;
 #endif
 //#define CFG_DEBUG_MT
 
+#include <assert.h>
+#include <cmath>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include <math.h>
-#include <cmath>
 #ifdef WIN32
+#include <io.h>
 #include <tchar.h>
 #include <windows.h>
-#include <io.h>
 #endif
-#include <float.h>
-#include <vector>
-#include <list>
-#include <string>
-#include <queue>
 #include <algorithm>
+#include <float.h>
 #include <fstream>
+#include <list>
+#include <queue>
+#include <string>
+#include <vector>
 
 typedef unsigned char ubyte;
-typedef unsigned short ushort;  // NOLINT
+typedef unsigned short ushort; // NOLINT
 typedef unsigned int uint;
-typedef unsigned long long ullong;  // NOLINT
+typedef unsigned long long ullong; // NOLINT
 
 #ifdef max
 #undef max
@@ -88,4 +88,4 @@ typedef unsigned long long ullong;  // NOLINT
 #undef ERROR
 #endif
 
-#endif  // IBA_IBA_CONFIG_H_
+#endif // IBA_IBA_CONFIG_H_

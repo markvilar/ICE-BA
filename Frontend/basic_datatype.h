@@ -19,18 +19,21 @@
 #include <Eigen/Core>
 #include <vector>
 
-namespace XP {
+namespace XP
+{
 
-class ImuData {
- public:
-  Eigen::Vector3f accel;
-  Eigen::Vector3f ang_v;
-  float time_stamp;
- public:
+class ImuData
+{
+public:
+    Eigen::Vector3f accel;
+    Eigen::Vector3f ang_v;
+    float time_stamp;
+
+public:
 #ifndef __ANDROID__
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 #endif
 };
 
-}  // namespace XP
-#endif  // XP_INCLUDE_XP_DATA_ATOM_BASIC_DATATYPE_H_
+} // namespace XP
+#endif // XP_INCLUDE_XP_DATA_ATOM_BASIC_DATATYPE_H_

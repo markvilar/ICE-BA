@@ -11,17 +11,17 @@
 include(FindPackageHandleStandardArgs)
 
 set(CVD_ROOT_DIR /usr/local/
- CACHE PATH "Folder contains libcvd"
+	CACHE PATH "Folder contains libcvd"
 )
 
 find_path(CVD_INCLUDE_DIR cvd/config.h
-          PATHS ${CVD_ROOT_DIR}/include)
+	PATHS ${CVD_ROOT_DIR}/include)
 
-find_library(CVD_LIBRARY cvd
-             PATHS ${CVD_ROOT_DIR}
-             PATH_SUFFIXES
-               lib
-               lib64)
+find_library(CVD_LIBRARY cvd 
+	PATHS ${CVD_ROOT_DIR}
+    PATH_SUFFIXES
+    lib
+    lib64)
 
 find_package_handle_standard_args(CVD
   DEFAULT_MSG

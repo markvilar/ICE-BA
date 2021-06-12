@@ -4,7 +4,7 @@
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
- * 
+ *
  *   * Redistributions of source code must retain the above copyright notice,
  *     this list of conditions and the following disclaimer.
  *   * Redistributions in binary form must reproduce the above copyright notice,
@@ -39,71 +39,79 @@
 #include "cameras/CameraBase.hpp"
 
 /// \brief vio Main namespace of this package.
-namespace vio {
+namespace vio
+{
 /// \brief cameras Namespace for camera-related functionality.
-namespace cameras {
+namespace cameras
+{
 
 // Creates a random (uniform distribution) image point.
-Eigen::Vector2d CameraBase::createRandomImagePoint() const {
-  // Uniform random sample in image coordinates.
-  // Add safety boundary for later inaccurate backprojection
-  Eigen::Vector2d outPoint = Eigen::Vector2d::Random();
-  outPoint += Eigen::Vector2d::Ones();
-  outPoint *= 0.5;
-  outPoint[0] *= static_cast<double>(imageWidth_ - 0.022);
-  outPoint[0] += 0.011;
-  outPoint[1] *= static_cast<double>(imageHeight_ - 0.022);
-  outPoint[1] += 0.011;
-  return outPoint;
+Eigen::Vector2d CameraBase::createRandomImagePoint() const
+{
+    // Uniform random sample in image coordinates.
+    // Add safety boundary for later inaccurate backprojection
+    Eigen::Vector2d outPoint = Eigen::Vector2d::Random();
+    outPoint += Eigen::Vector2d::Ones();
+    outPoint *= 0.5;
+    outPoint[0] *= static_cast<double>(imageWidth_ - 0.022);
+    outPoint[0] += 0.011;
+    outPoint[1] *= static_cast<double>(imageHeight_ - 0.022);
+    outPoint[1] += 0.011;
+    return outPoint;
 }
 
 // Creates a random (uniform distribution) image point.
-Eigen::Vector2f CameraBase::createRandomImagePoint2f() const {
-  // Uniform random sample in image coordinates.
-  // Add safety boundary for later inaccurate backprojection
-  Eigen::Vector2f outPoint = Eigen::Vector2f::Random();
-  outPoint += Eigen::Vector2f::Ones();
-  outPoint *= 0.5;
-  outPoint[0] *= static_cast<double>(imageWidth_ - 0.022);
-  outPoint[0] += 0.011;
-  outPoint[1] *= static_cast<double>(imageHeight_ - 0.022);
-  outPoint[1] += 0.011;
-  return outPoint;
+Eigen::Vector2f CameraBase::createRandomImagePoint2f() const
+{
+    // Uniform random sample in image coordinates.
+    // Add safety boundary for later inaccurate backprojection
+    Eigen::Vector2f outPoint = Eigen::Vector2f::Random();
+    outPoint += Eigen::Vector2f::Ones();
+    outPoint *= 0.5;
+    outPoint[0] *= static_cast<double>(imageWidth_ - 0.022);
+    outPoint[0] += 0.011;
+    outPoint[1] *= static_cast<double>(imageHeight_ - 0.022);
+    outPoint[1] += 0.011;
+    return outPoint;
 }
 
-
-Eigen::Vector2d CameraBase::createRandomImagePointAtRadius(double radius) const {
-  Eigen::Vector2d outPoint = Eigen::Vector2d::Random();
-  outPoint.normalize();
-  outPoint *= radius;
-  outPoint[0] += imageWidth_ / 2;
-  outPoint[1] += imageHeight_ / 2;
-  return outPoint;
+Eigen::Vector2d CameraBase::createRandomImagePointAtRadius(double radius) const
+{
+    Eigen::Vector2d outPoint = Eigen::Vector2d::Random();
+    outPoint.normalize();
+    outPoint *= radius;
+    outPoint[0] += imageWidth_ / 2;
+    outPoint[1] += imageHeight_ / 2;
+    return outPoint;
 }
 
 // Creates a random visible point in Euclidean coordinates.
-Eigen::Vector3d CameraBase::createRandomVisiblePoint(double minDist,
-                                                     double maxDist) const {
-  // random image point first:
-  Eigen::Vector2d imagePoint = createRandomImagePoint();
-  // now sample random depth:
-  Eigen::Vector2d depth = Eigen::Vector2d::Random();
-  Eigen::Vector3d ray;
-  while (!backProject(imagePoint, &ray)) {
-    // In case backProject return false (E.g., RadialTangentialDistortion8)
-    imagePoint = createRandomImagePoint();
-  }
-  ray.normalize();
-  ray *= (0.5 * (maxDist - minDist) * (depth[0] + 1.0) + minDist);  // rescale and offset
-  return ray;
+Eigen::Vector3d CameraBase::createRandomVisiblePoint(
+    double minDist, double maxDist) const
+{
+    // random image point first:
+    Eigen::Vector2d imagePoint = createRandomImagePoint();
+    // now sample random depth:
+    Eigen::Vector2d depth = Eigen::Vector2d::Random();
+    Eigen::Vector3d ray;
+    while (!backProject(imagePoint, &ray))
+    {
+        // In case backProject return false (E.g., RadialTangentialDistortion8)
+        imagePoint = createRandomImagePoint();
+    }
+    ray.normalize();
+    ray *= (0.5 * (maxDist - minDist) * (depth[0] + 1.0) +
+            minDist); // rescale and offset
+    return ray;
 }
 
 // Creates a random visible point in homogeneous coordinates.
 Eigen::Vector4d CameraBase::createRandomVisibleHomogeneousPoint(
-    double minDist, double maxDist) const {
-  Eigen::Vector3d point = createRandomVisiblePoint(minDist, maxDist);
-  return Eigen::Vector4d(point[0], point[1], point[2], 1.0);
+    double minDist, double maxDist) const
+{
+    Eigen::Vector3d point = createRandomVisiblePoint(minDist, maxDist);
+    return Eigen::Vector4d(point[0], point[1], point[2], 1.0);
 }
 
-}  // namespace cameras
-}  // namespace vio
+} // namespace cameras
+} // namespace vio

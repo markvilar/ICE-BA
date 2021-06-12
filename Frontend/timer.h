@@ -20,43 +20,51 @@
 #include <chrono>
 #include <string>
 
-namespace XP {
+namespace XP
+{
 // Create a scoped timer. Result will be printed to vlog
-class ScopedMicrosecondTimer {
- public:
-  explicit ScopedMicrosecondTimer(const std::string& text_id, int vlog_level);
-  ~ScopedMicrosecondTimer();
- private:
-  const std::string text_id_;
-  const int vlog_level_;
-  std::chrono::time_point<std::chrono::steady_clock> t_start_;
+class ScopedMicrosecondTimer
+{
+public:
+    explicit ScopedMicrosecondTimer(const std::string& text_id, int vlog_level);
+    ~ScopedMicrosecondTimer();
+
+private:
+    const std::string text_id_;
+    const int vlog_level_;
+    std::chrono::time_point<std::chrono::steady_clock> t_start_;
 };
 
 // Create a scoped timer.
 // The construction time and the deconstruction timestamp will be logged
-class ScopedLoopProfilingTimer {
+class ScopedLoopProfilingTimer
+{
 public:
-  explicit ScopedLoopProfilingTimer(const std::string& text_id, int vlog_level);
-  ~ScopedLoopProfilingTimer();
+    explicit ScopedLoopProfilingTimer(
+        const std::string& text_id, int vlog_level);
+    ~ScopedLoopProfilingTimer();
+
 private:
-  const std::string text_id_;
-  const int vlog_level_;
-  std::chrono::time_point<std::chrono::steady_clock> t_start_;
+    const std::string text_id_;
+    const int vlog_level_;
+    std::chrono::time_point<std::chrono::steady_clock> t_start_;
 };
 
 // Create a timer. Result will be printed to vlog
-class MicrosecondTimer {
- public:
-  explicit MicrosecondTimer(const std::string& text_id, int vlog_level);
-  MicrosecondTimer();
-  int end();
-  ~MicrosecondTimer();
- private:
-  bool has_ended_;
-  const std::string text_id_;
-  const int vlog_level_;
-  std::chrono::time_point<std::chrono::steady_clock> t_start_;
+class MicrosecondTimer
+{
+public:
+    explicit MicrosecondTimer(const std::string& text_id, int vlog_level);
+    MicrosecondTimer();
+    int end();
+    ~MicrosecondTimer();
+
+private:
+    bool has_ended_;
+    const std::string text_id_;
+    const int vlog_level_;
+    std::chrono::time_point<std::chrono::steady_clock> t_start_;
 };
 
-}  // namespace XP
-#endif  // XP_HELPER_TIMER_H
+} // namespace XP
+#endif // XP_HELPER_TIMER_H

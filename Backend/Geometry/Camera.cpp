@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#include "stdafx.h"
 #include "Camera.h"
+#include "stdafx.h"
 
 #ifdef CFG_DEBUG_EIGEN
 #if 0
@@ -126,64 +126,73 @@ float Camera::Prior::Rigid::EigenGetCost(const float w, const Rigid3D &T1, const
 
 //#define CAMERA_FIX_POSE_EIGEN_DEBUG_JACOBIAN
 Camera::Fix::Origin::EigenErrorJacobian
-Camera::Fix::Origin::EigenGetErrorJacobian(const Rigid3D &T, const float eps) const {
+Camera::Fix::Origin::EigenGetErrorJacobian(
+    const Rigid3D& T, const float eps) const
+{
 //#ifdef CFG_DEBUG
 #if 0
   ((Rigid3D *) &T)->MakeIdentity();
 #endif
-  LA::AlignedVector3f g;
-  //Rotation3D RT;
-  //T.GetGravity(g);
-  //RT.MakeIdentity(&g);
-  //RT.Transpose();
-  //const EigenRotation3D e_RzT = RT;
-  const EigenRotation3D e_RzT = m_RT;
-  const EigenRotation3D e_R = T;
-  const EigenRotation3D e_eR = EigenRotation3D(e_RzT * e_R);
-  const EigenVector3f e_er = e_eR.GetRodrigues(eps);
-  const EigenMatrix3x3f e_JrI = EigenRotation3D::GetRodriguesJacobianInverse(e_er, eps);
-  const EigenMatrix3x3f e_Jr = EigenMatrix3x3f(e_JrI * e_eR);
-  EigenErrorJacobian e_Je;
-  e_Je.m_Jr = e_Jr;
-  e_Je.m_er = e_er;
-  e_Je.m_ep = T.GetPosition();
+    LA::AlignedVector3f g;
+    // Rotation3D RT;
+    // T.GetGravity(g);
+    // RT.MakeIdentity(&g);
+    // RT.Transpose();
+    // const EigenRotation3D e_RzT = RT;
+    const EigenRotation3D e_RzT = m_RT;
+    const EigenRotation3D e_R = T;
+    const EigenRotation3D e_eR = EigenRotation3D(e_RzT * e_R);
+    const EigenVector3f e_er = e_eR.GetRodrigues(eps);
+    const EigenMatrix3x3f e_JrI =
+        EigenRotation3D::GetRodriguesJacobianInverse(e_er, eps);
+    const EigenMatrix3x3f e_Jr = EigenMatrix3x3f(e_JrI * e_eR);
+    EigenErrorJacobian e_Je;
+    e_Je.m_Jr = e_Jr;
+    e_Je.m_er = e_er;
+    e_Je.m_ep = T.GetPosition();
 #ifdef CAMERA_FIX_POSE_EIGEN_DEBUG_JACOBIAN
-  //const float e_drMax = 1.0f;
-  const float e_drMax = 10.0f;
-  const EigenVector3f e_dr = EigenVector3f::GetRandom(e_drMax * UT_FACTOR_DEG_TO_RAD);
-  const EigenRotation3D e_RGT = EigenMatrix3x3f(e_R * EigenRotation3D(e_dr));
-  const EigenVector3f e_er1 = EigenVector3f(e_er - EigenRotation3D(e_RzT * e_RGT).GetRodrigues());
-  const EigenVector3f e_er2 = EigenVector3f(e_er1 + e_Jr * e_dr);
-  UT::AssertReduction(e_er1, e_er2);
+    // const float e_drMax = 1.0f;
+    const float e_drMax = 10.0f;
+    const EigenVector3f e_dr =
+        EigenVector3f::GetRandom(e_drMax * UT_FACTOR_DEG_TO_RAD);
+    const EigenRotation3D e_RGT = EigenMatrix3x3f(e_R * EigenRotation3D(e_dr));
+    const EigenVector3f e_er1 =
+        EigenVector3f(e_er - EigenRotation3D(e_RzT * e_RGT).GetRodrigues());
+    const EigenVector3f e_er2 = EigenVector3f(e_er1 + e_Jr * e_dr);
+    UT::AssertReduction(e_er1, e_er2);
 #endif
-  return e_Je;
+    return e_Je;
 }
 
-Camera::Fix::Origin::EigenFactor
-Camera::Fix::Origin::EigenGetFactor(const Rigid3D &T, const float eps) const {
-  EigenFactor e_A;
-  const EigenErrorJacobian e_Je = EigenGetErrorJacobian(T, eps);
-  e_A.m_A.setZero();
-  const xp128f &wr = m_wr;
-  const float wp = m_wp[0];
-  const EigenMatrix3x3f e_Wr = EigenMatrix3x3f(wr[0], wr[1], wr[2]);
-  const EigenMatrix3x3f e_JTWr = EigenMatrix3x3f(e_Je.m_Jr.transpose() * e_Wr);
-  e_A.m_A.block<3, 3>(3, 3) = e_JTWr * e_Je.m_Jr;
-  e_A.m_b.block<3, 1>(3, 0) = e_JTWr * e_Je.m_er;
-  e_A.m_A(0, 0) = e_A.m_A(1, 1) = e_A.m_A(2, 2) = wp;
-  e_A.m_b.block<3, 1>(0, 0) = e_Je.m_ep * wp;
-  e_A.m_F = (e_Wr * e_Je.m_er).dot(e_Je.m_er) + wp * e_Je.m_ep.squaredNorm();
-  return e_A;
+Camera::Fix::Origin::EigenFactor Camera::Fix::Origin::EigenGetFactor(
+    const Rigid3D& T, const float eps) const
+{
+    EigenFactor e_A;
+    const EigenErrorJacobian e_Je = EigenGetErrorJacobian(T, eps);
+    e_A.m_A.setZero();
+    const xp128f& wr = m_wr;
+    const float wp = m_wp[0];
+    const EigenMatrix3x3f e_Wr = EigenMatrix3x3f(wr[0], wr[1], wr[2]);
+    const EigenMatrix3x3f e_JTWr =
+        EigenMatrix3x3f(e_Je.m_Jr.transpose() * e_Wr);
+    e_A.m_A.block<3, 3>(3, 3) = e_JTWr * e_Je.m_Jr;
+    e_A.m_b.block<3, 1>(3, 0) = e_JTWr * e_Je.m_er;
+    e_A.m_A(0, 0) = e_A.m_A(1, 1) = e_A.m_A(2, 2) = wp;
+    e_A.m_b.block<3, 1>(0, 0) = e_Je.m_ep * wp;
+    e_A.m_F = (e_Wr * e_Je.m_er).dot(e_Je.m_er) + wp * e_Je.m_ep.squaredNorm();
+    return e_A;
 }
 
-float Camera::Fix::Origin::EigenGetCost(const Rigid3D &T, const EigenVector6f &e_x,
-                                        const float eps) const {
-  const EigenErrorJacobian e_Je = EigenGetErrorJacobian(T, eps);
-  const EigenVector3f e_er = EigenVector3f(e_Je.m_er + e_Je.m_Jr * e_x.block<3, 1>(3, 0));
-  const EigenVector3f e_ep = EigenVector3f(e_Je.m_ep + e_x.block<3, 1>(0, 0));
-  const xp128f &wr = m_wr;
-  const float wp = m_wp[0];
-  const EigenMatrix3x3f e_Wr = EigenMatrix3x3f(wr[0], wr[1], wr[2]);
-  return (e_Wr * e_er).dot(e_er) + wp * e_ep.squaredNorm();
+float Camera::Fix::Origin::EigenGetCost(
+    const Rigid3D& T, const EigenVector6f& e_x, const float eps) const
+{
+    const EigenErrorJacobian e_Je = EigenGetErrorJacobian(T, eps);
+    const EigenVector3f e_er =
+        EigenVector3f(e_Je.m_er + e_Je.m_Jr * e_x.block<3, 1>(3, 0));
+    const EigenVector3f e_ep = EigenVector3f(e_Je.m_ep + e_x.block<3, 1>(0, 0));
+    const xp128f& wr = m_wr;
+    const float wp = m_wp[0];
+    const EigenMatrix3x3f e_Wr = EigenMatrix3x3f(wr[0], wr[1], wr[2]);
+    return (e_Wr * e_er).dot(e_er) + wp * e_ep.squaredNorm();
 }
 #endif
