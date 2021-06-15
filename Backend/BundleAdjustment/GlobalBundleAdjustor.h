@@ -889,8 +889,6 @@ protected:
     GlobalMap* m_GM;
     LocalBundleAdjustor* m_LBA;
 
-    // TODO: Investigate why LocalBundleAdjustor is declared here.
-    // class LocalBundleAdjustor* m_LBA;
     Camera::Calibration m_K;
     int m_verbose, m_debug, m_history;
     const Camera* m_CsGT;
