@@ -6,12 +6,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustor.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorDL.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o"
-  "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorDebug.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorGN.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorIO.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustor.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorDL.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o"
-  "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorDebug.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorGN.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorIO.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o"
   "/home/martin/Develop/ICE-BA/Backend/Geometry/Camera.cpp" "/home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.o"

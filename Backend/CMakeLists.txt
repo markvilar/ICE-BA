@@ -2,18 +2,16 @@
 # ---- Bundle Adjustment ------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-set(HEADERS_BUNDLEADJUSTMENT
+set(HEADERS_BUNDLE_ADJUSTMENT
     BundleAdjustment/GlobalBundleAdjustor.h
     BundleAdjustment/LocalBundleAdjustor.h)
 
-set(SOURCES_BUNDLEADJUSTMENT
+set(SOURCES_BUNDLE_ADJUSTMENT
     BundleAdjustment/GlobalBundleAdjustor.cpp
-    BundleAdjustment/GlobalBundleAdjustorDebug.cpp
     BundleAdjustment/GlobalBundleAdjustorDL.cpp
     BundleAdjustment/GlobalBundleAdjustorGN.cpp
     BundleAdjustment/GlobalBundleAdjustorIO.cpp
     BundleAdjustment/LocalBundleAdjustor.cpp
-    BundleAdjustment/LocalBundleAdjustorDebug.cpp
     BundleAdjustment/LocalBundleAdjustorDL.cpp
     BundleAdjustment/LocalBundleAdjustorGN.cpp
     BundleAdjustment/LocalBundleAdjustorIO.cpp)
@@ -49,7 +47,7 @@ set(SOURCES_GEOMETRY
 
 set(LINEAR_ALGEBRA_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/LinearAlgebra")
 
-set(HEADERS_LINEARALGEBRA
+set(HEADERS_LINEAR_ALGEBRA
     LinearAlgebra/LinearSystem.h
     LinearAlgebra/Matrix2x2.h
     LinearAlgebra/Matrix2x3.h
@@ -120,26 +118,13 @@ set(SOURCES_UTILITY
 # ---- ICE-BA Library ---------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-# TODO: Move the include dir to code to be more clear,
-# e.g., <IBA.h> becomes <IBA/IBA.h>
-# Since IBA_INCLUDE_DIRS is relative, do NOT expose it outside of Solver
-# TODO(mingyu): Need to add a cached IBA_INCLUDE_DIRS that only exposes the necessary headers
 set(IBA_INCLUDE_DIRS 
-    IBA
-    BundleAdjustment
-    Geometry
-    LinearAlgebra
-    Map
-    Utility)
-
-set(GLOBAL_IBA_INCLUDE_DIRS
-    ${PROJECT_SOURCE_DIR}/IBA
-    ${PROJECT_SOURCE_DIR}/BundleAdjustment
-    ${PROJECT_SOURCE_DIR}/Geometry
-    ${PROJECT_SOURCE_DIR}/LinearAlgebra
-    ${PROJECT_SOURCE_DIR}/Map
-    ${PROJECT_SOURCE_DIR}/Utility
-    CACHE INTERNAL "IBA include dirs")
+    ${PROJECT_SOURCE_DIR}/Backend/IBA
+    ${PROJECT_SOURCE_DIR}/Backend/BundleAdjustment
+    ${PROJECT_SOURCE_DIR}/Backend/Geometry
+    ${PROJECT_SOURCE_DIR}/Backend/LinearAlgebra
+    ${PROJECT_SOURCE_DIR}/Backend/Map
+    ${PROJECT_SOURCE_DIR}/Backend/Utility)
 
 set(HEADERS_IBA
     IBA/IBA.h
@@ -148,9 +133,9 @@ set(HEADERS_IBA
     IBA/IBA_internal.h
     IBA/Parameter.h
     IBA/stdafx.h
-    ${HEADERS_BUNDLEADJUSTMENT}
+    ${HEADERS_BUNDLE_ADJUSTMENT}
     ${HEADERS_GEOMETRY}
-    ${HEADERS_LINEARALGEBRA}
+    ${HEADERS_LINEAR_ALGEBRA}
     ${HEADERS_MAP}
     ${HEADERS_UTILITY})
 
@@ -158,9 +143,9 @@ set(SOURCES_IBA
     IBA/IBA.cpp
     IBA/Parameter.cpp
     IBA/stdafx.cpp
-    ${SOURCES_BUNDLEADJUSTMENT}
+    ${SOURCES_BUNDLE_ADJUSTMENT}
     ${SOURCES_GEOMETRY}
-    ${SOURCES_LINEARALGEBRA}
+    ${SOURCES_LINEAR_ALGEBRA}
     ${SOURCES_MAP}
     ${SOURCES_UTILITY})
 
@@ -173,7 +158,7 @@ target_include_directories(IBA PUBLIC
     ${Boost_INCLUDE_DIR}
     ${GLOG_INCLUDE_DIRS})
 
-target_link_libraries(IBA
+target_link_libraries(IBA PUBLIC
     ${Boost_LIBRARIES}
     ${GLOG_LIBRARIES}
     ${X11_LIBRARIES}
@@ -183,12 +168,9 @@ target_link_libraries(IBA
 # ---- Visualization ----------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-if (CVD_FOUND)
-    set(VISUALIZATION_INCLUDE_DIR Visualization)
-
-    set(GLOBAL_VISUALIZATION_INCLUDE_DIR
-        ${PROJECT_SOURCE_DIR}/Visualization
-        CACHE INTERNAL "vis include dir")
+if(CVD_FOUND)
+    set(VISUALIZATION_INCLUDE_DIR 
+        ${PROJECT_SOURCE_DIR}/Backend/Visualization)
 
     set(HEADERS_VISUALIZATION
         Visualization/Arcball.h
@@ -219,7 +201,7 @@ if (CVD_FOUND)
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${EIGEN_INCLUDE_DIR})
 
-    target_link_libraries(IBAVis
+    target_link_libraries(IBAVis PUBLIC
         IBA
         ${Boost_LIBRARIES}
         ${CVD_LIBRARIES}

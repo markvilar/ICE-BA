@@ -52,27 +52,27 @@
 #define UT_1_SQRT2 0.7071067811865475244f    // 1/sqrt(2)
 #define UT_1_SQRT2PI 0.39894228040143267794f // 1/sqrt(2pi)
 
-#define UT_GET_STRING(format, str)                                             \
-    {                                                                          \
-        if (format)                                                            \
-        {                                                                      \
-            va_list args;                                                      \
-            va_start(args, format);                                            \
-            vsprintf(str, format, args);                                       \
-            va_end(args);                                                      \
-        }                                                                      \
-        else                                                                   \
-        {                                                                      \
-            str[0] = 0;                                                        \
-        }                                                                      \
-    }
+#define UT_GET_STRING(format, str)   \
+{                                    \
+    if (format)                      \
+    {                                \
+        va_list args;                \
+        va_start(args, format);      \
+        vsprintf(str, format, args); \
+        va_end(args);                \
+    }                                \
+    else                             \
+    {                                \
+        str[0] = 0;                  \
+    }                                \
+}
 
-#define UT_SWAP(a, b)                                                          \
-    {                                                                          \
-        const auto t = (a);                                                    \
-        (a) = (b);                                                             \
-        (b) = (t);                                                             \
-    }
+#define UT_SWAP(a, b)   \
+{                       \
+    const auto t = (a); \
+    (a) = (b);          \
+    (b) = (t);          \
+}
 
 #define UT_CLAMP(v, vMin, vMax) std::min(std::max((v), (vMin)), (vMax))
 
@@ -99,6 +99,7 @@
 
 namespace UT
 {
+
 void Assert(const bool expression, const char* format, ...);
 void DebugStart();
 bool Debugging();
@@ -109,32 +110,39 @@ void Print(const char* format, ...);
 void PrintSeparator(const char c = '-');
 int PrintStringWidth();
 void SaveSeparator(FILE* fp, const char c = '-');
+
 inline void PrintLoaded(const char* fileName)
 {
 #ifdef CFG_VERBOSE
     printf("Loaded \'%s\'\n", fileName);
 #endif
 }
+
 inline void PrintSaved(const char* fileName)
 {
 #ifdef CFG_VERBOSE
     printf("Saved \'%s\'\n", fileName);
 #endif
 }
+
 inline void PrintLoaded(const std::string fileName)
 {
     PrintLoaded(fileName.c_str());
 }
+
 inline void PrintSaved(const std::string fileName)
 {
     PrintSaved(fileName.c_str());
 }
+
 template <typename TYPE>
 inline void PrintValue(const TYPE v, const bool e = false)
 {
     Print("%d", v);
 }
-template <> inline void PrintValue<float>(const float v, const bool e)
+
+template <> 
+inline void PrintValue<float>(const float v, const bool e)
 {
     if (e)
     {
@@ -145,7 +153,9 @@ template <> inline void PrintValue<float>(const float v, const bool e)
         Print("%f", v);
     }
 }
-template <> inline void PrintValue<double>(const double v, const bool e)
+
+template <> 
+inline void PrintValue<double>(const double v, const bool e)
 {
     if (e)
     {
@@ -156,6 +166,7 @@ template <> inline void PrintValue<double>(const double v, const bool e)
         Print("%f", v);
     }
 }
+
 template <typename TYPE>
 inline void PrintError(const TYPE v1, const TYPE v2, const bool e = false)
 {
@@ -171,50 +182,73 @@ inline void PrintError(const TYPE v1, const TYPE v2, const bool e = false)
 void Error(const char* format = NULL, ...);
 void Check(const char* format = NULL, ...);
 
-template <typename TYPE> inline TYPE Random();
-template <> inline int Random<int>()
+template <typename TYPE> 
+inline TYPE Random();
+
+template <> 
+inline int Random<int>()
 {
     // Error("Random\n");
     return rand();
 } // [0, RAND_MAX]
-template <> inline bool Random<bool>() { return (Random<int>() & 1) == 0; }
-template <> inline ubyte Random<ubyte>() { return Random<int>() & 255; }
-template <> inline ushort Random<ushort>() { return ushort(Random<int>()); }
-template <> inline int16_t Random<int16_t>()
+
+template <> 
+inline bool Random<bool>() { return (Random<int>() & 1) == 0; }
+
+template <> 
+inline ubyte Random<ubyte>() { return Random<int>() & 255; }
+
+template <> 
+inline ushort Random<ushort>() { return ushort(Random<int>()); }
+
+template <> 
+inline int16_t Random<int16_t>()
 {
     return int16_t(Random<int>() - 16384);
 }
-template <> inline float Random<float>()
+
+template <> 
+inline float Random<float>()
 {
     return static_cast<float>(Random<int>()) / RAND_MAX;
 }
 
-template <typename TYPE> inline TYPE Random(const TYPE vMax);
-template <> inline ubyte Random<ubyte>(const ubyte vMax)
+template <typename TYPE> 
+inline TYPE Random(const TYPE vMax);
+
+template <> 
+inline ubyte Random<ubyte>(const ubyte vMax)
 {
     return Random<int>() % vMax;
 }
-template <> inline int Random<int>(const int vMax)
+
+template <> 
+inline int Random<int>(const int vMax)
 {
     return Random<int>() % vMax;
 }
-template <> inline float Random<float>(const float vMax)
+
+template <> 
+inline float Random<float>(const float vMax)
 {
     return Random<float>() * vMax;
 }
 
-template <typename TYPE> inline TYPE Random(const TYPE vMin, const TYPE vMax)
+template <typename TYPE> 
+inline TYPE Random(const TYPE vMin, const TYPE vMax)
 {
     return TYPE(Random<float>() * (vMax - vMin) + vMin);
 }
 
-template <typename TYPE> inline void Random(TYPE* v, const int N)
+template <typename TYPE> 
+inline void Random(TYPE* v, const int N)
 {
     for (int i = 0; i < N; ++i)
     {
         v[i] = Random<TYPE>();
     }
 }
+
 template <typename TYPE>
 inline void Random(TYPE* v, const int N, const TYPE vMax)
 {
@@ -223,6 +257,7 @@ inline void Random(TYPE* v, const int N, const TYPE vMax)
         v[i] = Random<TYPE>(vMax);
     }
 }
+
 template <typename TYPE>
 inline void Random(TYPE* v, const int N, const TYPE vMin, const TYPE vMax)
 {
@@ -252,6 +287,7 @@ inline float RandomUniform()
     const float x = Random<float>();
     return x + x - 1.0f;
 }
+
 inline float RandomGaussian()
 {
     float r, t;
@@ -261,6 +297,7 @@ inline float RandomGaussian()
     t = Random<float>() * UT_2PI;
     return sqrtf(-2.0f * logf(r)) * UT_COSF(t);
 }
+
 inline void RandomGaussian(float& x, float& y)
 {
     float w;
@@ -278,91 +315,165 @@ inline void RandomGaussian(float& x, float& y)
     y *= w;
 }
 
-template <typename TYPE> inline TYPE Epsilon();
-template <> inline float Epsilon<float>() { return FLT_EPSILON; }
-template <> inline double Epsilon<double>() { return DBL_EPSILON; }
-template <typename TYPE> inline TYPE EpsilonMin();
-template <> inline float EpsilonMin<float>() { return UT_FLT_EPSILON_MIN; }
-template <> inline double EpsilonMin<double>() { return UT_DBL_EPSILON_MIN; }
-template <typename TYPE> inline TYPE EpsilonMax();
-template <> inline float EpsilonMax<float>() { return UT_FLT_EPSILON_MAX; }
-template <> inline double EpsilonMax<double>() { return UT_DBL_EPSILON_MAX; }
-template <typename TYPE> inline TYPE EpsilonRatioMin();
-template <> inline float EpsilonRatioMin<float>()
+template <typename TYPE> 
+inline TYPE Epsilon();
+
+template <> 
+inline float Epsilon<float>() { return FLT_EPSILON; }
+
+template <> 
+inline double Epsilon<double>() { return DBL_EPSILON; }
+
+template <typename TYPE> 
+inline TYPE EpsilonMin();
+
+template <> 
+inline float EpsilonMin<float>() { return UT_FLT_EPSILON_MIN; }
+
+template <> 
+inline double EpsilonMin<double>() { return UT_DBL_EPSILON_MIN; }
+
+template <typename TYPE> 
+inline TYPE EpsilonMax();
+
+template <> 
+inline float EpsilonMax<float>() { return UT_FLT_EPSILON_MAX; }
+
+template <> 
+inline double EpsilonMax<double>() { return UT_DBL_EPSILON_MAX; }
+
+template <typename TYPE> 
+inline TYPE EpsilonRatioMin();
+
+template <> 
+inline float EpsilonRatioMin<float>()
 {
     return UT_FLT_EPSILON_RATIO_MIN;
 }
-template <> inline double EpsilonRatioMin<double>()
+
+template <> 
+inline double EpsilonRatioMin<double>()
 {
     return UT_DBL_EPSILON_RATIO_MIN;
 }
-template <typename TYPE> inline TYPE EpsilonRatioMax();
-template <> inline float EpsilonRatioMax<float>()
+
+template <typename TYPE> 
+inline TYPE EpsilonRatioMax();
+
+template <> 
+inline float EpsilonRatioMax<float>()
 {
     return UT_FLT_EPSILON_RATIO_MAX;
 }
-template <> inline double EpsilonRatioMax<double>()
+
+template <> 
+inline double EpsilonRatioMax<double>()
 {
     return UT_DBL_EPSILON_RATIO_MAX;
 }
-template <typename TYPE> inline TYPE Invalid();
-template <> inline ubyte Invalid<ubyte>() { return UCHAR_MAX; }
-template <> inline int16_t Invalid<int16_t>() { return SHRT_MAX; }
-template <> inline ushort Invalid<ushort>() { return USHRT_MAX; }
-template <> inline int Invalid<int>() { return INT_MAX; }
-template <> inline float Invalid<float>() { return FLT_MAX; }
-template <> inline double Invalid<double>() { return DBL_MAX; }
-template <typename TYPE> inline bool IsNAN(const TYPE v);
+
+template <typename TYPE> 
+inline TYPE Invalid();
+
+template <> 
+inline ubyte Invalid<ubyte>() { return UCHAR_MAX; }
+
+template <> 
+inline int16_t Invalid<int16_t>() { return SHRT_MAX; }
+
+template <> 
+inline ushort Invalid<ushort>() { return USHRT_MAX; }
+
+template <> 
+inline int Invalid<int>() { return INT_MAX; }
+
+template <> 
+inline float Invalid<float>() { return FLT_MAX; }
+
+template <> 
+inline double Invalid<double>() { return DBL_MAX; }
+
+template <typename TYPE> 
+inline bool IsNAN(const TYPE v);
+
 #ifdef WIN32
-template <> inline bool IsNAN<float>(const float v) { return _isnanf(v) != 0; }
-template <> inline bool IsNAN<double>(const double v) { return _isnan(v) != 0; }
+template <> 
+inline bool IsNAN<float>(const float v) { return _isnanf(v) != 0; }
+
+template <> 
+inline bool IsNAN<double>(const double v) { return _isnan(v) != 0; }
+
 #else
-template <> inline bool IsNAN<float>(const float v)
+template <> 
+inline bool IsNAN<float>(const float v)
 {
     return std::isnan(v) != 0;
 }
-template <> inline bool IsNAN<double>(const double v)
+
+template <> 
+inline bool IsNAN<double>(const double v)
 {
     return std::isnan(v) != 0;
 }
+
 #endif
+
 template <typename TYPE>
 inline TYPE Inverse(const TYPE v, const TYPE s = 1, const TYPE eps = 0)
 {
     return v == 0 ? 0 : std::max(s / v, eps);
 }
-template <typename TYPE> inline float Percentage(const TYPE vn, const TYPE vd)
+
+template <typename TYPE> 
+inline float Percentage(const TYPE vn, const TYPE vd)
 {
     return vd == 0 ? 0.0f : static_cast<float>(vn * 100) / vd;
 }
 
-template <typename TYPE> inline void Save(const TYPE v, FILE* fp);
-template <> inline void Save<int>(const int v, FILE* fp)
+template <typename TYPE> 
+inline void Save(const TYPE v, FILE* fp);
+
+template <> 
+inline void Save<int>(const int v, FILE* fp)
 {
     fprintf(fp, "%d\n", v);
 }
-template <> inline void Save<float>(const float v, FILE* fp)
+
+template <> 
+inline void Save<float>(const float v, FILE* fp)
 {
     fprintf(fp, "%f\n", v);
 }
-template <> inline void Save<double>(const double v, FILE* fp)
+
+template <> 
+inline void Save<double>(const double v, FILE* fp)
 {
     fprintf(fp, "%lf\n", v);
 }
-template <typename TYPE> inline bool Load(TYPE& v, FILE* fp);
-template <> inline bool Load<int>(int& v, FILE* fp)
+
+template <typename TYPE> 
+inline bool Load(TYPE& v, FILE* fp);
+
+template <> 
+inline bool Load<int>(int& v, FILE* fp)
 {
     return fscanf(fp, "%d", &v) == 1;
 }
-template <> inline bool Load<float>(float& v, FILE* fp)
+
+template <> 
+inline bool Load<float>(float& v, FILE* fp)
 {
     return fscanf(fp, "%f", &v) == 1;
 }
-template <> inline bool Load<double>(double& v, FILE* fp)
+
+template <> 
+inline bool Load<double>(double& v, FILE* fp)
 {
     return fscanf(fp, "%lf", &v) == 1;
 }
-template <typename TYPE> inline TYPE Load(FILE* fp)
+
+template <typename TYPE> 
+inline TYPE Load(FILE* fp)
 {
     TYPE v;
     if (Load<TYPE>(v, fp))
@@ -374,7 +485,9 @@ template <typename TYPE> inline TYPE Load(FILE* fp)
         return Invalid<TYPE>();
     }
 }
-template <typename TYPE> inline bool Load(TYPE* V, const int N, FILE* fp)
+
+template <typename TYPE> 
+inline bool Load(TYPE* V, const int N, FILE* fp)
 {
     for (int i = 0; i < N; ++i)
     {
@@ -385,35 +498,47 @@ template <typename TYPE> inline bool Load(TYPE* V, const int N, FILE* fp)
     }
     return true;
 }
-template <class TYPE> inline void SaveB(const TYPE& v, FILE* fp)
+
+template <class TYPE> 
+inline void SaveB(const TYPE& v, FILE* fp)
 {
     fwrite(&v, sizeof(TYPE), 1, fp);
 }
-template <class TYPE> inline void SaveB(const TYPE* v, const int N, FILE* fp)
+
+template <class TYPE> 
+inline void SaveB(const TYPE* v, const int N, FILE* fp)
 {
     if (N > 0)
     {
         fwrite(v, sizeof(TYPE), N, fp);
     }
 }
-template <class TYPE> inline void LoadB(TYPE& v, FILE* fp)
+
+template <class TYPE> 
+inline void LoadB(TYPE& v, FILE* fp)
 {
     fread(&v, sizeof(TYPE), 1, fp);
 }
-template <class TYPE> inline void LoadB(TYPE* v, const int N, FILE* fp)
+
+template <class TYPE> 
+inline void LoadB(TYPE* v, const int N, FILE* fp)
 {
     if (N > 0)
     {
         fread(v, sizeof(TYPE), N, fp);
     }
 }
-template <typename TYPE> inline TYPE LoadB(FILE* fp)
+
+template <typename TYPE> 
+inline TYPE LoadB(FILE* fp)
 {
     TYPE v;
     LoadB<TYPE>(v, fp);
     return v;
 }
-template <class TYPE> inline float MemoryMB(const int N = 1)
+
+template <class TYPE> 
+inline float MemoryMB(const int N = 1)
 {
     return sizeof(TYPE) * N / 1024.0f;
 }
@@ -445,9 +570,12 @@ std::string FileNameAppendSuffix(const std::string fileName, const int suffix);
 std::string FileNameAppendSuffix(const std::string fileName);
 std::string FileNameReplaceDirectory(const std::string fileName,
     const std::string dirSrc, const std::string dirDst);
+
 template <typename TYPE>
 inline TYPE FileNameExtractSuffix(const std::string fileName);
-template <> inline int FileNameExtractSuffix<int>(const std::string fileName)
+
+template <> 
+inline int FileNameExtractSuffix<int>(const std::string fileName)
 {
     if (fileName == "")
     {
@@ -478,6 +606,7 @@ template <> inline int FileNameExtractSuffix<int>(const std::string fileName)
         return atoi(fileName.substr(i1, i2 - i1).c_str());
     }
 }
+
 template <>
 inline double FileNameExtractSuffix<double>(const std::string fileName)
 {
@@ -503,6 +632,7 @@ void StringSaveB(const std::string& str, FILE* fp);
 void StringLoadB(std::string& str, FILE* fp);
 void StringsSaveB(const std::vector<std::string>& strs, FILE* fp);
 void StringsLoadB(std::vector<std::string>& strs, FILE* fp);
+
 inline float StringMemoryMB(const std::string& str)
 {
     return MemoryMB<char>(static_cast<int>(str.size()));
@@ -540,6 +670,7 @@ inline std::vector<const TYPE_DST*> Pointers(const std::vector<TYPE_SRC>& V)
     }
     return Vptr;
 }
+
 template <class TYPE_SRC_1, class TYPE_SRC_2, class TYPE_DST>
 inline std::vector<const TYPE_DST*> Pointers(
     const std::vector<TYPE_SRC_1>& V1, const std::vector<TYPE_SRC_2>& V2)
@@ -576,6 +707,7 @@ inline bool Equal(
            er <= EpsilonRatioMin<TYPE>() ||
            (e <= EpsilonMax<TYPE>() && er <= EpsilonRatioMax<TYPE>());
 }
+
 template <typename TYPE>
 inline bool AssertEqual(const TYPE v1, const TYPE v2, const int verbose = 1,
     const std::string str = "", const TYPE epsAbs = 0, const TYPE epsRel = 0)
@@ -596,6 +728,7 @@ inline bool AssertEqual(const TYPE v1, const TYPE v2, const int verbose = 1,
     }
     return Equal(v1, v2, epsAbs, epsRel);
 }
+
 template <typename TYPE>
 inline bool AssertZero(const TYPE v, const int verbose = 1,
     const std::string str = "", const TYPE epsAbs = 0, const TYPE epsRel = 0)
@@ -603,15 +736,18 @@ inline bool AssertZero(const TYPE v, const int verbose = 1,
     return AssertEqual<TYPE>(0, v, verbose, str, epsAbs, epsRel);
 }
 
-template <class TYPE> inline void VectorMakeZero(std::vector<TYPE>& V)
+template <class TYPE> 
+inline void VectorMakeZero(std::vector<TYPE>& V)
 {
     memset(V.data(), 0, sizeof(TYPE) * V.size());
 }
+
 template <class TYPE>
 inline void VectorMakeZero(std::vector<TYPE>& V, const int i1, const int i2)
 {
     memset(V.data() + i1, 0, sizeof(TYPE) * (i2 - i1));
 }
+
 template <class TYPE>
 inline int VectorCount(const std::vector<TYPE>& V, const TYPE& v)
 {
@@ -626,7 +762,9 @@ inline int VectorCount(const std::vector<TYPE>& V, const TYPE& v)
     }
     return SN;
 }
-template <class TYPE> inline int VectorCountNonZero(const std::vector<TYPE>& V)
+
+template <class TYPE> 
+inline int VectorCountNonZero(const std::vector<TYPE>& V)
 {
     int SN = 0;
     const int N = static_cast<int>(V.size());
@@ -639,6 +777,7 @@ template <class TYPE> inline int VectorCountNonZero(const std::vector<TYPE>& V)
     }
     return SN;
 }
+
 template <class TYPE>
 inline int VectorCountFlag(const std::vector<TYPE>& V, const TYPE flag)
 {
@@ -653,6 +792,7 @@ inline int VectorCountFlag(const std::vector<TYPE>& V, const TYPE flag)
     }
     return SN;
 }
+
 template <class TYPE>
 inline int VectorSearchFirstFlagNot(
     const std::vector<TYPE>& V, const int i1, const int i2, const TYPE flag)
@@ -666,6 +806,7 @@ inline int VectorSearchFirstFlagNot(
     }
     return -1;
 }
+
 template <class TYPE>
 inline bool VectorExistFlag(const TYPE* V, const int N, const TYPE flag)
 {
@@ -678,6 +819,7 @@ inline bool VectorExistFlag(const TYPE* V, const int N, const TYPE flag)
     }
     return false;
 }
+
 template <class TYPE>
 inline bool VectorExistFlagNot(const TYPE* V, const int N, const TYPE flag)
 {
@@ -690,7 +832,9 @@ inline bool VectorExistFlagNot(const TYPE* V, const int N, const TYPE flag)
     }
     return false;
 }
-template <class TYPE> inline TYPE VectorLength(const TYPE* V, const int N)
+
+template <class TYPE> 
+inline TYPE VectorLength(const TYPE* V, const int N)
 {
     double Sv = 0.0;
     for (int i = 0; i < N; ++i)
@@ -699,6 +843,7 @@ template <class TYPE> inline TYPE VectorLength(const TYPE* V, const int N)
     }
     return TYPE(sqrt(Sv));
 }
+
 template <class TYPE_1, class TYPE_2>
 inline bool VectorEqual(const TYPE_1* V1, const TYPE_2* V2, const int N)
 {
@@ -709,6 +854,7 @@ inline bool VectorEqual(const TYPE_1* V1, const TYPE_2* V2, const int N)
     }
     return equal;
 }
+
 template <class TYPE_1, class TYPE_2>
 inline bool VectorEqual(
     const std::vector<TYPE_1>& V1, const std::vector<TYPE_2>& V2)
@@ -717,6 +863,7 @@ inline bool VectorEqual(
            VectorEqual<TYPE_1, TYPE_2>(
                V1.data(), V2.data(), static_cast<int>(V1.size()));
 }
+
 template <typename TYPE>
 inline bool VectorAssertEqual(const TYPE* V1, const TYPE* V2, const int N,
     const int verbose = 1, const std::string str = "", const TYPE epsAbs = 0,
@@ -745,12 +892,14 @@ inline bool VectorAssertEqual(const TYPE* V1, const TYPE* V2, const int N,
     }
     return equal;
 }
+
 template <class TYPE_1, class TYPE_2>
 inline void VectorAssertEqual(
     const std::vector<TYPE_1>& V1, const std::vector<TYPE_2>& V2)
 {
     UT_ASSERT(VectorEqual(V1, V2));
 }
+
 template <typename TYPE>
 inline bool VectorAssertZero(const TYPE* V, const int N, const int verbose = 1,
     const std::string str = "", const float epsAbs = 0.0f,
@@ -777,6 +926,7 @@ inline bool VectorAssertZero(const TYPE* V, const int N, const int verbose = 1,
     }
     return zero;
 }
+
 template <class TYPE>
 inline std::vector<TYPE> VectorRepeat(const std::vector<TYPE>& V, const int N)
 {
@@ -795,6 +945,7 @@ inline std::vector<TYPE> VectorRepeat(const std::vector<TYPE>& V, const int N)
     }
     return _V;
 }
+
 template <class TYPE>
 inline void VectorSave(const std::vector<TYPE>& V, FILE* fp)
 {
@@ -805,7 +956,9 @@ inline void VectorSave(const std::vector<TYPE>& V, FILE* fp)
         V[i].Save(fp);
     }
 }
-template <class TYPE> inline void VectorLoad(std::vector<TYPE>& V, FILE* fp)
+
+template <class TYPE> 
+inline void VectorLoad(std::vector<TYPE>& V, FILE* fp)
 {
     const int N = Load<int>(fp);
     V.resize(N);
@@ -814,6 +967,7 @@ template <class TYPE> inline void VectorLoad(std::vector<TYPE>& V, FILE* fp)
         V[i].Load(fp);
     }
 }
+
 template <class TYPE>
 inline void VectorSaveB(const SIMD::vector<TYPE>& V, FILE* fp)
 {
@@ -821,6 +975,7 @@ inline void VectorSaveB(const SIMD::vector<TYPE>& V, FILE* fp)
     SaveB<int>(N, fp);
     SaveB<TYPE>(V.data(), N, fp);
 }
+
 template <class TYPE>
 inline void VectorSaveB(const std::vector<TYPE>& V, FILE* fp)
 {
@@ -828,6 +983,7 @@ inline void VectorSaveB(const std::vector<TYPE>& V, FILE* fp)
     SaveB<int>(N, fp);
     SaveB<TYPE>(V.data(), N, fp);
 }
+
 template <class TYPE>
 inline bool VectorSaveB(const std::vector<TYPE>& V, const char* fileName)
 {
@@ -841,20 +997,25 @@ inline bool VectorSaveB(const std::vector<TYPE>& V, const char* fileName)
     PrintSaved(fileName);
     return true;
 }
-template <class TYPE> inline int VectorLoadB(SIMD::vector<TYPE>& V, FILE* fp)
+
+template <class TYPE> 
+inline int VectorLoadB(SIMD::vector<TYPE>& V, FILE* fp)
 {
     const int N = LoadB<int>(fp);
     V.resize(N);
     LoadB<TYPE>(V.data(), N, fp);
     return N;
 }
-template <class TYPE> inline int VectorLoadB(std::vector<TYPE>& V, FILE* fp)
+
+template <class TYPE> 
+inline int VectorLoadB(std::vector<TYPE>& V, FILE* fp)
 {
     const int N = LoadB<int>(fp);
     V.resize(N);
     LoadB<TYPE>(V.data(), N, fp);
     return N;
 }
+
 template <class TYPE>
 inline bool VectorLoadB(std::vector<TYPE>& V, const char* fileName)
 {
@@ -868,6 +1029,7 @@ inline bool VectorLoadB(std::vector<TYPE>& V, const char* fileName)
     PrintLoaded(fileName);
     return true;
 }
+
 template <class TYPE>
 inline void VectorsSaveB(const std::vector<std::vector<TYPE>>& Vs, FILE* fp)
 {
@@ -878,6 +1040,7 @@ inline void VectorsSaveB(const std::vector<std::vector<TYPE>>& Vs, FILE* fp)
         VectorSaveB(Vs[i], fp);
     }
 }
+
 template <class TYPE>
 inline void VectorsLoadB(std::vector<std::vector<TYPE>>& Vs, FILE* fp)
 {
@@ -888,6 +1051,7 @@ inline void VectorsLoadB(std::vector<std::vector<TYPE>>& Vs, FILE* fp)
         VectorLoadB(Vs[i], fp);
     }
 }
+
 template <class TYPE>
 inline void VectorsSaveB(const std::list<std::vector<TYPE>>& Vs, FILE* fp)
 {
@@ -900,6 +1064,7 @@ inline void VectorsSaveB(const std::list<std::vector<TYPE>>& Vs, FILE* fp)
         VectorSaveB<TYPE>(*i, fp);
     }
 }
+
 template <class TYPE>
 inline void VectorsLoadB(std::list<std::vector<TYPE>>& Vs, FILE* fp)
 {
@@ -912,10 +1077,13 @@ inline void VectorsLoadB(std::list<std::vector<TYPE>>& Vs, FILE* fp)
         VectorLoadB<TYPE>(*i, fp);
     }
 }
-template <class TYPE> inline float VectorMemoryMB(const std::vector<TYPE>& V)
+
+template <class TYPE> 
+inline float VectorMemoryMB(const std::vector<TYPE>& V)
 {
     return MemoryMB<TYPE>(static_cast<int>(V.capacity()));
 }
+
 template <class TYPE>
 inline float VectorsMemoryMB(const std::vector<std::vector<TYPE>>& Vs)
 {
@@ -928,7 +1096,8 @@ inline float VectorsMemoryMB(const std::vector<std::vector<TYPE>>& Vs)
     return sum;
 }
 
-template <class TYPE> inline void ListSaveB(const std::list<TYPE>& L, FILE* fp)
+template <class TYPE> 
+inline void ListSaveB(const std::list<TYPE>& L, FILE* fp)
 {
     const int N = static_cast<int>(L.size());
     SaveB<int>(N, fp);
@@ -938,7 +1107,9 @@ template <class TYPE> inline void ListSaveB(const std::list<TYPE>& L, FILE* fp)
         SaveB<TYPE>(*i, fp);
     }
 }
-template <class TYPE> inline void ListLoadB(std::list<TYPE>& L, FILE* fp)
+
+template <class TYPE> 
+inline void ListLoadB(std::list<TYPE>& L, FILE* fp)
 {
     const int N = LoadB<int>(fp);
     L.resize(N);
@@ -955,9 +1126,11 @@ inline void ImageInterpolateWeight(const float dx, const float dy, xp128f& w)
     w[1] = dy - w[3];
     w[0] = 1.0f - dy - w[2];
 }
+
 template <typename TYPE_SRC, typename TYPE_DST>
 inline void ImageInterpolate(const TYPE_SRC i11, const TYPE_SRC i12,
     const TYPE_SRC i21, const TYPE_SRC i22, const xp128f& w, TYPE_DST& ip);
+
 template <>
 inline void ImageInterpolate<ubyte, ubyte>(const ubyte i11, const ubyte i12,
     const ubyte i21, const ubyte i22, const xp128f& w, ubyte& ip)
@@ -969,6 +1142,7 @@ inline void ImageInterpolate<ubyte, ubyte>(const ubyte i11, const ubyte i12,
         static_cast<float>(i22));
     ip = static_cast<ubyte>((tmp * w).vsum_all() + 0.5f);
 }
+
 template <>
 inline void ImageInterpolate<ushort, ushort>(const ushort i11, const ushort i12,
     const ushort i21, const ushort i22, const xp128f& w, ushort& ip)
@@ -980,6 +1154,7 @@ inline void ImageInterpolate<ushort, ushort>(const ushort i11, const ushort i12,
         static_cast<float>(i22));
     ip = static_cast<ushort>((tmp * w).vsum_all() + 0.5f);
 }
+
 template <>
 inline void ImageInterpolate<ubyte, float>(const ubyte i11, const ubyte i12,
     const ubyte i21, const ubyte i22, const xp128f& w, float& ip)
@@ -991,6 +1166,7 @@ inline void ImageInterpolate<ubyte, float>(const ubyte i11, const ubyte i12,
         static_cast<float>(i22));
     ip = (tmp * w).vsum_all();
 }
+
 template <>
 inline void ImageInterpolate<int16_t, float>(const int16_t i11,
     const int16_t i12, const int16_t i21, const int16_t i22, const xp128f& w,
@@ -1003,6 +1179,7 @@ inline void ImageInterpolate<int16_t, float>(const int16_t i11,
         static_cast<float>(i22));
     ip = (tmp * w).vsum_all();
 }
+
 template <>
 inline void ImageInterpolate<ushort, float>(const ushort i11, const ushort i12,
     const ushort i21, const ushort i22, const xp128f& w, float& ip)
@@ -1014,6 +1191,7 @@ inline void ImageInterpolate<ushort, float>(const ushort i11, const ushort i12,
         static_cast<float>(i22));
     ip = (tmp * w).vsum_all();
 }
+
 template <>
 inline void ImageInterpolate<float, float>(const float i11, const float i12,
     const float i21, const float i22, const xp128f& w, float& ip)
@@ -1023,23 +1201,32 @@ inline void ImageInterpolate<float, float>(const float i11, const float i12,
     ip = (tmp * w).vsum_all();
 }
 
-template <typename TYPE> inline TYPE Input();
-template <> inline std::string Input<std::string>() { return StringInput(); }
-template <> inline int Input<int>()
+template <typename TYPE> 
+inline TYPE Input();
+
+template <> 
+inline std::string Input<std::string>() { return StringInput(); }
+
+template <> 
+inline int Input<int>()
 {
     const std::string input = Input<std::string>();
     int _input;
     sscanf(input.c_str(), "%d", &_input);
     return _input;
 }
-template <> inline char Input<char>()
+
+template <> 
+inline char Input<char>()
 {
     const std::string input = Input<std::string>();
     char _input;
     sscanf(input.c_str(), "%c", &_input);
     return _input;
 }
-template <typename TYPE> inline TYPE Input(const char* format, ...)
+
+template <typename TYPE> 
+inline TYPE Input(const char* format, ...)
 {
     char str[UT_STRING_WIDTH_MAX];
     UT_GET_STRING(format, str);
@@ -1047,20 +1234,26 @@ template <typename TYPE> inline TYPE Input(const char* format, ...)
     return Input<TYPE>();
 }
 
-template <class ERROR> inline float ESSquaredLength(const ERROR& e)
+template <class ERROR> 
+inline float ESSquaredLength(const ERROR& e)
 {
     return e.SquaredLength();
 }
-template <> inline float ESSquaredLength<float>(const float& e)
+
+template <> 
+inline float ESSquaredLength<float>(const float& e)
 {
     return e * e;
 }
+
 template <class ERROR>
 inline void ESErrorPrint(const ERROR& e, const bool l = true)
 {
     e.Print(l);
 }
-template <> inline void ESErrorPrint<float>(const float& e, const bool l)
+
+template <> 
+inline void ESErrorPrint<float>(const float& e, const bool l)
 {
     if (l)
     {
@@ -1071,18 +1264,24 @@ template <> inline void ESErrorPrint<float>(const float& e, const bool l)
         Print("%.2f", e);
     }
 }
-template <class INDEX> inline void ESIndexPrint(const INDEX& idx)
+
+template <class INDEX> 
+inline void ESIndexPrint(const INDEX& idx)
 {
     idx.Print();
 }
-template <> inline void ESIndexPrint<int>(const int& idx)
+
+template <> 
+inline void ESIndexPrint<int>(const int& idx)
 {
     if (idx != -1)
     {
         Print(" [%d]", idx);
     }
 }
-template <class ERROR, class INDEX> class ES
+
+template <class ERROR, class INDEX> 
+class ES
 {
 public:
     inline void Initialize(const bool r = false)
@@ -1092,6 +1291,7 @@ public:
         m_SNr = r ? 0 : -1;
         m_e2Max = m_FMax = -FLT_MAX;
     }
+    
     inline void Accumulate(const ERROR& e, const float F = -1.0f,
         const INDEX idx = -1, const bool r = true)
     {
@@ -1126,8 +1326,10 @@ public:
             m_idxMax = idx;
         }
     }
+    
     inline bool Valid() const { return m_SN > 0; }
     inline float Mean() const { return m_SN == 0 ? 0.0f : sqrtf(m_Se2 / m_SN); }
+
     inline float Maximal() const
     {
         return m_e2Max == -FLT_MAX ? 0.0f : sqrtf(m_e2Max);
@@ -1248,6 +1450,7 @@ inline bool AssertReduction(const TYPE& v1, const TYPE& v2,
     }
     return false;
 }
+
 template <>
 inline bool AssertReduction<float>(const float& v1, const float& v2,
     const int verbose, const std::string str, const float vMin,
@@ -1282,6 +1485,7 @@ inline bool AssertReduction<float>(const float& v1, const float& v2,
     }
     return false;
 }
+
 inline void PrintReduction(const float v1, const float v2,
     const std::string str = "", const bool e = false, const bool n = true)
 {
@@ -1306,6 +1510,7 @@ inline void PrintReduction(const float v1, const float v2,
         Print("\n");
     }
 }
+
 inline void PrintReduction(const float v1, const float* v2, const int N2,
     const std::string str = "", const bool e = false, const bool n = true)
 {

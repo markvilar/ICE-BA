@@ -23,13 +23,14 @@ namespace MT
 static boost::shared_mutex g_MT;
 static boost::condition g_CDT;
 static int g_flag;
+
 class Task
 {
 public:
     inline Task() {}
-    inline Task(const int iFrm, const int iTask) : m_iFrm(iFrm), m_iTask(iTask)
-    {
-    }
+    inline Task(const int iFrm, const int iTask) 
+        : m_iFrm(iFrm), m_iTask(iTask) {}
+
     inline bool operator==(const Task& task) const
     {
         return m_iFrm == task.m_iFrm && m_iTask == task.m_iTask;
@@ -42,6 +43,7 @@ public:
 public:
     int m_iFrm, m_iTask;
 };
+
 class TaskHistory
 {
 public:

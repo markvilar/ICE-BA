@@ -18,17 +18,12 @@
 
 #define CFG_IMU_FULL_COVARIANCE
 #define CFG_INCREMENTAL_PCG
-//#define CFG_PCG_DOUBLE
-//#define CFG_PCG_FULL_BLOCK
 #ifdef CFG_PCG_DOUBLE
 typedef double PCG_TYPE;
 #else
 typedef float PCG_TYPE;
 #endif
-//#define CFG_CAMERA_PRIOR_SQUARE_FORM
 #define CFG_CAMERA_PRIOR_DOUBLE
-//#define CFG_CAMERA_PRIOR_REORDER
-//#define CFG_HANDLE_SCALE_JUMP
 #define CFG_CHECK_REPROJECTION
 
 #define CFG_STEREO
@@ -37,25 +32,24 @@ typedef float PCG_TYPE;
 #define CFG_HISTORY
 #define CFG_GROUND_TRUTH
 #ifdef WIN32
-//#define CFG_DEBUG
 #else
-//#define CFG_DEBUG
 #endif
 #ifdef CFG_DEBUG
 #define CFG_DEBUG_EIGEN
 #endif
-//#define CFG_DEBUG_MT
 
 #include <assert.h>
 #include <cmath>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #ifdef WIN32
 #include <io.h>
 #include <tchar.h>
 #include <windows.h>
 #endif
+
 #include <algorithm>
 #include <float.h>
 #include <fstream>

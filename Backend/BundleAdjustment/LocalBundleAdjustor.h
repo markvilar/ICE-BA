@@ -2,10 +2,7 @@
  * Copyright 2017-2018 Baidu Robotic Vision Authors. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * you may not use this file except in compliance with the License.  * You may obtain a copy of the License at * * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -293,7 +290,6 @@ public:
             const int ik = static_cast<int>(m_ik2zm.size()) - 2;
             m_Is.push_back(Index(ik, iKF));
             m_iI2zm.push_back(Nzm2);
-            // m_ms.resize(Nzm2, LBA_FLAG_MARGINALIZATION_ZERO);
             m_ms.resize(Nzm2, LBA_FLAG_MARGINALIZATION_DEFAULT);
             m_SmddsST.InsertZero(Nzm1, Nzm, NULL);
         }
@@ -1304,6 +1300,7 @@ public:
                 float m_Tpv;
             };
         };
+        
         class Visual
         {
         public:
@@ -2134,7 +2131,7 @@ protected:
     std::list<std::vector<GlobalMap::InputCamera>> m_IUCs1, m_IUCs2;
 
     CameraLF m_C;
-    boost::shared_mutex m_MTC;
+    std::mutex m_MTC;
 
     Timer m_ts[TM_TYPES];
 #ifdef CFG_HISTORY
@@ -2292,6 +2289,7 @@ protected:
                 : m_iKF(iKF), m_iz(iz)
             {
             }
+
             inline bool operator<(const MeasurementKF& z) const
             {
                 return m_iKF < z.m_iKF;
@@ -2317,30 +2315,6 @@ protected:
         FTR::EigenFactor::DD m_Sadd;
         std::vector<FTR::EigenFactor::DD> m_SaddsST;
     };
-
-protected:
-    virtual void DebugMarginalizeLocalFrame();
-    virtual void DebugGenerateTracks();
-    virtual void DebugUpdateFactors();
-    virtual void DebugUpdateFactorsFeature();
-    virtual void DebugUpdateFactorsPriorDepth();
-    virtual void DebugUpdateFactorsPriorCameraMotion();
-    virtual void DebugUpdateFactorsIMU();
-    virtual void DebugUpdateFactorsFixOrigin();
-    virtual void DebugUpdateFactorsFixPositionZ();
-    virtual void DebugUpdateFactorsFixMotion();
-    virtual void DebugUpdateSchurComplement();
-    virtual void DebugSolveSchurComplement();
-    virtual void DebugSolveBackSubstitution();
-    virtual void DebugSolveGradientDescent();
-    virtual void DebugComputeReduction();
-    virtual void DebugComputeReductionFeature();
-    virtual void DebugComputeReductionPriorDepth();
-    virtual void DebugComputeReductionPriorCameraMotion();
-    virtual void DebugComputeReductionIMU();
-    virtual void DebugComputeReductionFixOrigin();
-    virtual void DebugComputeReductionFixPositionZ();
-    virtual void DebugComputeReductionFixMotion();
 
 protected:
     std::vector<std::vector<Track>> e_Xs;

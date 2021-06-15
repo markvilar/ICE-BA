@@ -25,9 +25,9 @@
 
 namespace UT
 {
+
 static boost::mutex g_mutex;
-// static std::string g_fileName = "";
-// static FILE *g_fp = NULL;
+
 class File
 {
 public:

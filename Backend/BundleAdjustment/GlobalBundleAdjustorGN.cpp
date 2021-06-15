@@ -14,26 +14,15 @@
  * limitations under the License.
  *****************************************************************************/
 #include "stdafx.h"
-//#ifndef CFG_DEBUG
-//#define CFG_DEBUG
-//#endif
 #ifdef CFG_DEBUG_EIGEN
-//#define GBA_DEBUG_EIGEN_PCG
 #endif
 #include "GlobalBundleAdjustor.h"
 #include <math.h> // isfinite
 
 #if defined WIN32 && defined CFG_DEBUG && defined CFG_GROUND_TRUTH
-//#define GBA_DEBUG_GROUND_TRUTH_STATE
-//#ifdef GBA_DEBUG_GROUND_TRUTH_STATE
-//#define GBA_DEBUG_GROUND_TRUTH_STATE_ERROR
-//#endif
 #endif
 
 #if defined CFG_DEBUG && defined CFG_VERBOSE
-//#define GBA_DEBUG_PCG_SAVE_RESIDUAL
-//#define GBA_DEBUG_PCG_SAVE_RESULT
-//#define GBA_DEBUG_PCG_LOAD_RESULT
 #endif
 
 void GlobalBundleAdjustor::UpdateFactors()
@@ -101,43 +90,10 @@ void GlobalBundleAdjustor::UpdateFactors()
             m_SAcmsLM[im].MakeZero();
         }
     }
-//#ifdef CFG_DEBUG
-#if 0
-  //const int iKF = nKFs - 1;
-  const int iKF = 45;
-  //m_Cs[iKF].Print(true);
-  const Camera::Factor::Unitary::CC &A = m_SAcus[iKF];
-#endif
-    UpdateFactorsFeature();
-//#ifdef CFG_DEBUG
-#if 0
-  //UT::Print("%.10e\n", A.m_A.m00());
-  UT::Print("%.10e\n", A.m_b.v0());
-#endif
-    UpdateFactorsPriorDepth();
-    // m_ts[TM_TEST_1].Start();
-    UpdateFactorsPriorCameraPose();
-    // m_ts[TM_TEST_1].Stop();
-    UpdateFactorsPriorCameraMotion();
-    UpdateFactorsIMU();
-    UpdateFactorsFixOrigin();
-    UpdateFactorsFixPositionZ();
-    UpdateFactorsFixMotion();
-//#ifdef CFG_DEBUG
-#if 0
-  //UT::Print("%.10e\n", A.m_A.m00());
-  UT::Print("%.10e\n", A.m_b.v0());
-#endif
 }
 
 void GlobalBundleAdjustor::UpdateFactorsFeature()
 {
-//#ifdef CFG_DEBUG
-#if 0
-  UT::DebugStart();
-  UT::DebugStop();
-  return;
-#endif
 #ifdef CFG_VERBOSE
     int SNz = 0, SNZ = 0;
 #endif
@@ -221,12 +177,6 @@ void GlobalBundleAdjustor::UpdateFactorsFeature()
                     m_K.m_br
 #endif
                 );
-//#ifdef CFG_DEBUG
-#if 0
-        if (iKF == 87 && iz == 2) {
-          UT::Print("%f\n", A.m_Aczz.m_A.m00());
-        }
-#endif
                 if (ud)
                 {
                     _KF.m_Axs[ix].m_Sadx += A.m_adx;
@@ -263,8 +213,6 @@ void GlobalBundleAdjustor::UpdateFactorsFeature()
                     Camera::Factor::Unitary::CC::AmB(A.m_Aczz, dAczz, dAczz);
                     SAczz += dAczz;
                 }
-                // dF = A.m_F - dF;
-                // m_F = dF + m_F;
                 m_ucs[_iKF] |= GBA_FLAG_FRAME_UPDATE_TRACK_INFORMATION;
                 _uds[ix] |= GBA_FLAG_TRACK_UPDATE_INFORMATION;
 #ifdef CFG_VERBOSE
@@ -308,22 +256,6 @@ void GlobalBundleAdjustor::UpdateFactorsPriorCameraPose()
     CameraPrior::Pose::Factor::Auxiliary U;
     // float dF;
     const int NZ = static_cast<int>(m_Zps.size());
-//#ifdef CFG_DEBUG
-#if 0
-//#if 1
-  FILE *fp = fopen("D:/tmp/Zp.txt", "w");
-  for (int iZ = 0; iZ < NZ; ++iZ) {
-    const CameraPrior::Pose &Z = m_Zps[iZ];
-    fprintf(fp, "%d: ", Z.m_iKFr);
-    const int N = static_cast<int>(Z.m_iKFs.size());
-    for (int i = 0; i < N; ++i) {
-      fprintf(fp, " %d", Z.m_iKFs[i]);
-    }
-    fprintf(fp, "\n");
-  }
-  fclose(fp);
-  exit(0);
-#endif
     for (int iZ = 0; iZ < NZ; ++iZ)
     {
         const CameraPrior::Pose& Z = m_Zps[iZ];
@@ -364,21 +296,7 @@ void GlobalBundleAdjustor::UpdateFactorsPriorCameraPose()
             Z.GetFactor(
                 BA_WEIGHT_PRIOR_CAMERA_POSE, m_Cs, &A, &U, BA_ANGLE_EPSILON);
         }
-#if 0
-    m_ts[TM_TEST_2].Start();
-    Z.GetErrorJacobian(m_Cs, &A.m_Je);
-    m_ts[TM_TEST_2].Stop();
-    m_ts[TM_TEST_3].Start();
-    const xp128f _w = xp128f::get(BA_WEIGHT_PRIOR_CAMERA_POSE);
-    U.Set(A.m_Je, _w, Z.m_Arr, Z.m_Arc, Z.m_Acc);
-    m_ts[TM_TEST_3].Stop();
-    m_ts[TM_TEST_4].Start();
-    A.m_F = Z.GetCost(BA_WEIGHT_PRIOR_CAMERA_POSE, A.m_Je.m_e, U.m_Aer, U.m_Aec);
-    m_ts[TM_TEST_4].Stop();
-    m_ts[TM_TEST_5].Start();
-    U.Get(A.m_Je.m_J.m_Jr, _w, Z.m_br, Z.m_bc, &A.m_A, &A.m_b);
-    m_ts[TM_TEST_5].Stop();
-#endif
+
         for (int i = -1, _i = 0; i < N; ++i, ++_i)
         {
             const int iKF = i == -1 ? Z.m_iKFr : Z.m_iKFs[i];
@@ -414,6 +332,7 @@ void GlobalBundleAdjustor::UpdateFactorsPriorCameraPose()
                 KF2.m_SAps[ip] += dAb;
             }
         }
+
         for (int i1 = 0, _i1 = 1; i1 < N; ++i1, ++_i1)
         {
             const int iKF1 = Z.m_iKFs[i1];
@@ -514,7 +433,6 @@ void GlobalBundleAdjustor::UpdateFactorsPriorCameraMotion()
 void GlobalBundleAdjustor::UpdateFactorsPriorDepth()
 {
     FTR::Factor::DD dadd;
-    // float dF;
 #ifdef CFG_STEREO
     FTR::Factor::Stereo::U U;
 #endif
@@ -709,45 +627,6 @@ void GlobalBundleAdjustor::UpdateFactorsIMU()
             "  Delta = %d / %d = %.2f%%\n", SNu, SN, UT::Percentage(SNu, SN));
     }
 #endif
-//#ifdef CFG_DEBUG
-#if 0
-  UT::DebugStart();
-  SolveSchurComplementGT(&m_xs);
-  const std::string dir = "D:/tmp/";
-  const std::string fileName1 = dir + UT::String("imu_%d_before.txt", m_iIter);
-  const std::string fileName2 = dir + UT::String("imu_%d_after.txt", m_iIter);
-  FILE *fp1 = fopen(fileName1.c_str(), "w");
-  FILE *fp2 = fopen(fileName2.c_str(), "w");
-  IMU::Delta::Error e1, e2;
-  const int Nm = m_CsLM.Size();
-  const LA::Vector6f *xcs = (LA::Vector6f *) m_xs.Data();
-  const LA::Vector9f *xms = (LA::Vector9f *) (xcs + Nc);
-  for (int ic1 = Nc - m_CsLM.Size(), ic2 = ic1 + 1, im1 = 0, im2 = 1; ic2 < Nc;
-       ic1 = ic2++, im1 = im2++) {
-    if (m_KFs[ic2].m_us.Empty()) {
-      continue;
-    }
-    const LA::Vector6f &xc1 = xcs[ic1], &xc2 = xcs[ic2];
-    const LA::Vector9f &xm1 = xms[im1], &xm2 = xms[im2];
-    const LA::AlignedVector3f xp1(&xc1.v0()), xr1(&xc1.v3());
-    const LA::AlignedVector3f xp2(&xc2.v0()), xr2(&xc2.v3());
-    const LA::AlignedVector3f xv1(&xm1.v0()), xba1(&xm1.v3()), xbw1(&xm1.v6());
-    const LA::AlignedVector3f xv2(&xm2.v0()), xba2(&xm2.v3()), xbw2(&xm2.v6());
-    const IMU::Delta &D = m_DsLM[im2];
-    D.GetError(m_CsLM[im1], m_CsLM[im2], m_K.m_pu, e1);
-    D.GetError(m_AdsLM[im2].m_Je, &xp1, &xr1, &xv1, &xba1, &xbw1,
-                                  &xp2, &xr2, &xv2, &xba2, &xbw2, e2);
-    fprintf(fp1, "%f %f %f %f\n", D.GetCost(BA_WEIGHT_IMU, e1),
-                                  sqrtf(e1.m_er.SquaredLength()) * UT_FACTOR_RAD_TO_DEG,
-                                  sqrtf(e1.m_ev.SquaredLength()), sqrtf(e1.m_ep.SquaredLength()));
-    fprintf(fp2, "%f %f %f %f\n", D.GetCost(BA_WEIGHT_IMU, e2),
-                                  sqrtf(e2.m_er.SquaredLength()) * UT_FACTOR_RAD_TO_DEG,
-                                  sqrtf(e2.m_ev.SquaredLength()), sqrtf(e2.m_ep.SquaredLength()));
-  }
-  fclose(fp1);  UT::PrintSaved(fileName1);
-  fclose(fp2);  UT::PrintSaved(fileName2);
-  UT::DebugStop();
-#endif
 }
 
 void GlobalBundleAdjustor::UpdateFactorsFixOrigin()
@@ -758,11 +637,8 @@ void GlobalBundleAdjustor::UpdateFactorsFixOrigin()
     {
         return;
     }
-    // float dF = m_Af->m_F;
     m_Zo.GetFactor(m_Cs[iKF], m_Ao, BA_ANGLE_EPSILON);
     m_SAcus[iKF] += m_Ao.m_A;
-    // dF = m_Af->m_F - dF;
-    // m_F = dF + m_F;
 }
 
 void GlobalBundleAdjustor::UpdateFactorsFixPositionZ()
@@ -848,10 +724,7 @@ void GlobalBundleAdjustor::UpdateFactorsFixMotion()
         const int i = ucm >> 5;
         if (ucm & GBA_FLAG_CAMERA_MOTION_UPDATE_VELOCITY)
         {
-            // dF = A.m_Av.m_F;
             zv[i].GetFactor(C.m_v, A.m_Av);
-            // dF = A.m_Av.m_F - dF;
-            // m_F = dF + m_F;
 #ifdef CFG_VERBOSE
             if (m_verbose >= 3)
                 ++SNv;
@@ -859,10 +732,7 @@ void GlobalBundleAdjustor::UpdateFactorsFixMotion()
         }
         if (ucm & GBA_FLAG_CAMERA_MOTION_UPDATE_BIAS_ACCELERATION)
         {
-            // dF = A.m_Aba.m_F;
             zba[i].GetFactor(C.m_ba, A.m_Aba);
-            // dF = A.m_Aba.m_F - dF;
-            // m_F = dF + m_F;
 #ifdef CFG_VERBOSE
             if (m_verbose >= 3)
                 ++SNba;
@@ -870,10 +740,7 @@ void GlobalBundleAdjustor::UpdateFactorsFixMotion()
         }
         if (ucm & GBA_FLAG_CAMERA_MOTION_UPDATE_BIAS_GYROSCOPE)
         {
-            // dF = A.m_Abw.m_F;
             zbw[i].GetFactor(C.m_bw, A.m_Abw);
-            // dF = A.m_Abw.m_F - dF;
-            // m_F = dF + m_F;
 #ifdef CFG_VERBOSE
             if (m_verbose >= 3)
                 ++SNbw;
@@ -925,12 +792,7 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
             }
         }
     }
-//#ifdef CFG_DEBUG
-#if 0
-  UT::DebugStart();
-  UT::DebugStop();
-  return;
-#endif
+
     int Nd = 0;
     m_idxsTmp1.assign(nKFs, -1);
     int* iKF2X = m_idxsTmp1.data();
@@ -939,6 +801,7 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
     const float eps = FLT_EPSILON;
     const float epsd =
         UT::Inverse(BA_VARIANCE_MAX_DEPTH, BA_WEIGHT_FEATURE, eps);
+
     for (int iKF = 0; iKF < nKFs; ++iKF)
     {
         if (!(m_ucs[iKF] & GBA_FLAG_FRAME_UPDATE_TRACK_INFORMATION))
@@ -968,6 +831,7 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
             }
         }
     }
+
 #ifdef CFG_VERBOSE
     int SNX = 0, SNs1 = 0, SNs2 = 0, SNS = 0;
 #endif
@@ -975,6 +839,7 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
     m_work.Resize(NmddC + Nd * sizeof(xp128f) / sizeof(float));
     float* mdds = m_work.Data();
     xp128f* _mdds = (xp128f*)(mdds + NmddC);
+
     for (int iKF = 0; iKF < nKFs; ++iKF)
     {
         const int iX = iKF2X[iKF];
@@ -1000,13 +865,13 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
             }
         }
     }
-    // SIMD::Add(Nd, UT::Inverse(BA_VARIANCE_REGULARIZATION_DEPTH,
-    // BA_WEIGHT_FEATURE), mdds);
+
     SIMD::Inverse(Nd, mdds);
     for (int id = 0; id < Nd; ++id)
     {
         _mdds[id].vdup_all_lane(mdds[id]);
     }
+
 #if defined CFG_VERBOSE && defined CFG_DEBUG
     if (m_verbose >= 3)
     {
@@ -1233,10 +1098,6 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
                 if (m_verbose >= 3)
                     Scxz = Sczz = 1;
 #endif
-//#ifdef CFG_DEBUG
-#if 0
-        UT::Print("%d %10e\n", iz, SMczz.m_A.m02());
-#endif
             }
         }
 #ifdef CFG_VERBOSE
@@ -1376,102 +1237,16 @@ void GlobalBundleAdjustor::UpdateSchurComplement()
 #endif
 }
 
-//////////////////////////////////////////////////////////////////////////
-// static int g_iIter = 0;
-//////////////////////////////////////////////////////////////////////////
-
 bool GlobalBundleAdjustor::SolveSchurComplement()
 {
-//#ifdef CFG_INCREMENTAL_PCG
-#if 0
-#ifdef CFG_INCREMENTAL_PCG_1
-  m_xcs.MakeZero();
-  m_xmsLM.MakeZero();
-#endif
-#endif
     const bool scc = SolveSchurComplementPCG();
-    //////////////////////////////////////////////////////////////////////////
-    // const int nIters = 20;
-    // for (g_iIter = 0; g_iIter < nIters; ++g_iIter) {
-    //  const int Nc = m_Cs.Size(), Nm = m_CsLM.Size();
-    //  const LA::Vector6f *xcsGN = (LA::Vector6f *) m_xsGN.Data();
-    //  const LA::Vector9f *xmsGN = (LA::Vector9f *) (xcsGN + Nc);
-    //  for (int ic = 0, im = Nm - Nc; ic < Nc; ++ic, ++im) {
-    //    m_xcs[ic] = xcsGN[ic];
-    //    if (im >= 0) {
-    //      m_xmsLM[im] = xmsGN[im];
-    //    }
-    //  }
-    //  UT::PrintSeparator('*');
-    //  UT::Print("%d\n", g_iIter);
-    //  SolveSchurComplementPCG();
-    //}
-    //////////////////////////////////////////////////////////////////////////
 #ifdef GBA_DEBUG_GROUND_TRUTH_STATE
     SolveSchurComplementGT(m_Cs, m_CsLM, &m_xsGN);
 #endif
     if (GBA_EMBEDDED_MOTION_ITERATION)
     {
-//#ifdef CFG_DEBUG
-#if 0
-    const LA::Vector6f *xcs = (LA::Vector6f *) m_xsGN.Data();
-    const LA::Vector9f *xms = (LA::Vector9f *) (xcs + m_KFs.size());
-    ConvertCameraUpdates(xcs, &m_xcsP);
-    const IMU::Delta::ES ESd1 = ComputeErrorStatisticIMU(m_xcsP.Data(), xms, false);
-    CameraPrior::Motion::ES ESm1 = ComputeErrorStatisticPriorCameraMotion(m_xcsP.Data(), xms);
-    const float F1 = ESd1.Total() + ESm1.Total();
-#endif
         EmbeddedMotionIteration();
-//#ifdef CFG_DEBUG
-#if 0
-    //PrintSchurComplementResidual();
-    const IMU::Delta::ES ESd2 = ComputeErrorStatisticIMU(m_xcsP.Data(), xms, false);
-    CameraPrior::Motion::ES ESm2 = ComputeErrorStatisticPriorCameraMotion(m_xcsP.Data(), xms);
-    const float F2 = ESd2.Total() + ESm2.Total();
-    //UT_ASSERT(F2 <= F1);
-    UT::AssertReduction(F1, F2, 1, UT::String("[%d] %d", m_KFs.back().m_T.m_iFrm));
-    //UT::Print("%e --> %e\n", F1, F2);
-#endif
     }
-//#ifdef CFG_INCREMENTAL_PCG
-#if 0
-  FILE *fp;
-  std::string fileName;
-  const int iFrm = m_KFs.back().m_T.m_iFrm;
-#ifdef CFG_INCREMENTAL_PCG_1
-  fileName = "D:/tmp/pcg/count_gba.txt";
-#else
-  fileName = "D:/tmp/pcg/count_gba_incr.txt";
-#endif
-  static bool g_first = true;
-  fp = fopen(fileName.c_str(), g_first ? "w" : "a");
-  g_first = false;
-  fprintf(fp, "%d %d %d\n", iFrm, m_iIter, m_iIterPCG);
-  fclose(fp);
-  fileName = UT::String("D:/tmp/pcg/state_gba_%04d_%02d.txt", iFrm, m_iIter);
-#ifdef CFG_INCREMENTAL_PCG_1
-  fp = fopen(fileName.c_str(), "wb");
-  m_xsGN.SaveB(fp);
-  m_xp2s.SaveB(fp);
-  m_xr2s.SaveB(fp);
-  m_xv2s.SaveB(fp);
-  m_xba2s.SaveB(fp);
-  m_xbw2s.SaveB(fp);
-  UT::SaveB(scc, fp);
-  fclose(fp);
-#else
-  fp = fopen(fileName.c_str(), "rb");
-  m_xsGN.LoadB(fp);
-  m_xp2s.LoadB(fp);
-  m_xr2s.LoadB(fp);
-  m_xv2s.LoadB(fp);
-  m_xba2s.LoadB(fp);
-  m_xbw2s.LoadB(fp);
-  const bool _scc = UT::LoadB<bool>(fp);
-  fclose(fp);
-  return _scc;
-#endif
-#endif
     if (!scc)
     {
         return false;
@@ -1535,12 +1310,9 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
         {
             Acbs[ik] -= KF.m_Zm.m_SMczms[ik];
         }
-        // if (im >= 1 && !(m_ucmsLM[im] & GBA_FLAG_CAMERA_MOTION_INVALID) &&
-        //               !(m_ucmsLM[im - 1] & GBA_FLAG_CAMERA_MOTION_INVALID)) {
         if (im >= 1 && !KF.m_us.Empty())
         {
 #ifdef CFG_DEBUG
-            // UT_ASSERT(KF.m_iKFsMatch.back() == ic - 1);
             UT_ASSERT(KF.m_iKFsMatch[KF.m_Zm.m_SMczms.Size() - 1] == ic - 1);
             UT_ASSERT(!(m_ucmsLM[im] & GBA_FLAG_CAMERA_MOTION_INVALID) &&
                       !(m_ucmsLM[im - 1] & GBA_FLAG_CAMERA_MOTION_INVALID));
@@ -1561,75 +1333,16 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
     m_zs.Resize(N);
     m_drs.Resize(N);
     m_dxs.Resize(N);
-//#ifdef CFG_DEBUG_EIGEN
-#if 0
-  EigenMatrixXd e_A;
-  e_A.resize(N, N);
-  e_A.setZero();
-  for (int ic = 0, icp = 0; ic < Nc; ++ic, icp += pc) {
-    e_A.block<pc, pc>(icp, icp) = EigenMatrix6x6f(m_Acus[ic]).cast<double>();
-    const KeyFrame &KF = m_KFs[ic];
-    const LA::AlignedMatrix6x6f *Acbs = m_Acbs.Data() + KF.m_iKp;
-    const int Nkp = static_cast<int>(KF.m_ikp2KF.size());
-    for (int ikp = 0; ikp < Nkp; ++ikp) {
-      const int _icp = KF.m_ikp2KF[ikp] * pc;
-      e_A.block<pc, pc>(_icp, icp) = EigenMatrix6x6f(Acbs[ikp]).cast<double>();
-    }
-  }
-  for (int ic = Nc - Nm, icp = ic * pc, im = 0, imp = Ncp; ic < Nc;
-       ++ic, icp += pc, ++im, imp += pm) {
-    const Camera::EigenFactor e_Acm = m_SAcmsLM[im];
-    //e_A.block<pm, pm>(imp, imp) = e_Acm.m_Au.m_Amm.cast<double>();
-    e_A.block<pm, pm>(imp, imp) = EigenMatrix9x9f(m_AmusLM[im]).cast<double>();
-    e_A.block<pc, pm>(icp, imp) = e_Acm.m_Au.m_Acm.cast<double>();
-    if (im > 0) {
-      const int _icp = icp - pc, _imp = imp - pm;
-      e_A.block<pc, pm>(_icp, imp) = e_Acm.m_Ab.m_Acm.cast<double>();
-      e_A.block<pm, pc>(_imp, icp) = e_Acm.m_Ab.m_Amc.cast<double>();
-      e_A.block<pc, pm>(icp, _imp) = e_Acm.m_Ab.m_Amc.cast<double>().transpose();
-      e_A.block<pm, pm>(_imp, imp) = e_Acm.m_Ab.m_Amm.cast<double>();
-    }
-  }
-  e_A.SetLowerFromUpper();
-  EigenVectorXd e_s;
-  const int e_rankLU = EigenRankLU(e_A), e_rankQR = EigenRankQR(e_A);
-  UT::Print("rank = %d (%d) / %d\n", e_rankLU, e_rankQR, N);
-  const double e_cond = EigenConditionNumber(e_A, &e_s);
-  UT::Print("cond = %e\n", e_cond);
-
-  const EigenVectorXd e_b = EigenVectorXd(m_bs);
-  const EigenVectorXd e_x = EigenVectorXd(e_A.ldlt().solve(e_b));
-  const EigenVectorXd e_Ax = EigenVectorXd(e_A * e_x);
-  const EigenVectorXd e_r = EigenVectorXd(e_Ax - e_b);
-  m_xsGN = e_x.GetAlignedVectorXf();
-  m_xsGN.MakeMinus();
-  SolveSchurComplementGT(m_Cs, m_CsLM, &m_xsGT);
-  m_xsGT.MakeMinus();
-  const EigenVectorXd e_xGT = EigenVectorXd(m_xsGT);
-  const EigenVectorXd e_AxGT = EigenVectorXd(e_A * e_xGT);
-  const EigenVectorXd e_rGT = EigenVectorXd(e_AxGT - e_b);
-  //const Residual RGT = ComputeResidual(m_xsGT, true);
-  UT::Print("%e vs %e\n", e_r.norm(), e_rGT.norm());
-  ConvertCameraUpdates(m_xsGN.Data(), &m_xp2s, &m_xr2s);
-  ConvertMotionUpdates(m_xsGN.Data() + Ncp, &m_xv2s, &m_xba2s, &m_xbw2s);
-  UT::Print("%f %f %f %f %f\n", sqrtf(m_xp2s.Mean()), sqrtf(m_xr2s.Mean()) * UT_FACTOR_RAD_TO_DEG,
-            sqrtf(m_xv2s.Mean()), sqrtf(m_xba2s.Mean()), sqrtf(m_xbw2s.Mean()) * UT_FACTOR_RAD_TO_DEG);
-  return true;
-#endif
 
     bool scc = true;
     PCG_TYPE Se2, Se2Pre, e2Max, alpha, beta, F, FMin;
     PCG_TYPE Se2Min, e2MaxMin;
     m_rs = m_bs;
-    // m_rs.Swap(m_bs);
 #ifdef CFG_INCREMENTAL_PCG
     m_xsGN.Resize(0);
     m_xsGN.Push((float*)m_xcs.Data(), Ncp);
     m_xsGN.Push((float*)m_xmsLM.Data(), Nmp);
     m_xsGN.MakeMinus();
-    // UT::DebugStart();
-    // m_xsGN.MakeZero();
-    // UT::DebugStop();
     m_xs = m_xsGN;
     ApplyA(m_xs, &m_drs);
     m_rs -= m_drs;
@@ -1638,93 +1351,26 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
     m_xs.MakeZero();
 #endif
     ApplyM(m_rs, &m_ps);
-#if 0
-//#if 1
-  UT::DebugStart();
-  LA::AlignedVectorXf xs, rs, ps;
-  SolveSchurComplementGT(m_Cs, m_CsLM, &m_xsGT);
-  m_xsGT.MakeMinus();
-  LA::AlignedVectorXf::AmB(m_xsGT, m_xs, ps);
-  ApplyA(m_xsGT, &m_drs);
-  rs = m_bs;
-  rs -= m_drs;
-  const PCG_TYPE r0 = rs.SquaredLength();
-  const PCG_TYPE F0 = m_xsGT.Dot(m_drs) * 0.5 - m_xsGT.Dot(m_bs);
-  ApplyA(ps, &m_drs);
-  const PCG_TYPE a0 = m_rs.Dot(ps) / ps.Dot(m_drs);
-  const PCG_TYPE a1 = 0.9;
-  const PCG_TYPE a2 = 1.1;
-  const PCG_TYPE da = 1.0e-3;
-  for (PCG_TYPE a = a0; a < a2; a = a == a0 ? a1 : a + da) {
-    ps.GetScaled(a, xs);
-    xs += m_xs;
-    ApplyA(xs, &m_drs);
-    rs = m_bs;
-    rs -= m_drs;
-    const PCG_TYPE r = rs.SquaredLength();
-    const PCG_TYPE F = xs.Dot(m_drs) * 0.5 - xs.Dot(m_bs);
-    UT::Print("a = %f, r = %e, F = %e\n", a, r - r0, F - F0);
-  }
-  UT::DebugStop();
-#endif
     ConvertCameraMotionResiduals(m_rs, m_ps, &Se2, &e2Max);
-#if 0
-  const PCG_TYPE s = 1;
-  //const PCG_TYPE s = 1 / Se2;
-  const xp128f _s = xp128f::get(float(s));
-  for (int ic = 0; ic < Nc; ++ic) {
-    m_Mcs[ic] *= _s;
-  }
-  for (int im = 0; im < Nm; ++im) {
-    m_MmsLM[im] *= _s;
-  }
-  m_ps *= s;
-  Se2 *= s;
-  e2Max *= s;
-#endif
 #ifdef CFG_DEBUG
     UT_ASSERT(Se2 >= 0 && e2Max >= 0);
 #endif
-//#ifdef CFG_DEBUG
-#if 0
-  if (m_iIter == 0) {
-    UT::DebugStart();
-  }
-#endif
     ApplyA(m_ps, &m_drs);
     alpha = Se2 / m_ps.Dot(m_drs);
-//#ifdef CFG_DEBUG
-#if 0
-  //const std::string dir = m_dir + "pcg/";
-  const std::string dir = "D:/tmp/pcg/";
-#if 0
-#ifdef WIN32
-  m_bs.AssertEqual(UT::String("%sb_%02d.txt", dir.c_str(), m_iIter), 2, "", -1.0f, -1.0f);
-  m_ps.AssertEqual(UT::String("%sp_%02d.txt", dir.c_str(), m_iIter), 2, "", -1.0f, -1.0f);
-  m_drs.AssertEqual(UT::String("%sAp_%02d.txt", dir.c_str(), m_iIter), 2, "", -1.0f, -1.0f);
-#else
-  m_bs.SaveB(UT::String("%sb_%02d.txt", dir.c_str(), m_iIter));
-  m_ps.SaveB(UT::String("%sp_%02d.txt", dir.c_str(), m_iIter));
-  m_drs.SaveB(UT::String("%sAp_%02d.txt", dir.c_str(), m_iIter));
-#endif
-#endif
-#endif
 #ifdef _MSC_VER
     if (_finite(alpha))
     {
 #else
     if (std::isfinite(alpha))
     {
-#endif // _MSC_VER
+#endif
         const PCG_TYPE e2MaxConv[2] = {
             ME::ChiSquareDistance<3>(
                 BA_PCG_MIN_CONVERGE_PROBABILITY, BA_WEIGHT_FEATURE) /* * s*/,
             ME::ChiSquareDistance<3>(
                 BA_PCG_MAX_CONVERGE_PROBABILITY, BA_WEIGHT_FEATURE) /* * s*/};
-        //////////////////////////////////////////////////////////////////////////
         Se2Min = Se2;
         e2MaxMin = e2Max;
-        //////////////////////////////////////////////////////////////////////////
 #ifdef CFG_VERBOSE
 #ifdef GBA_DEBUG_PCG_SAVE_RESIDUAL
         const std::string fileName = "D:/tmp/pcg.txt";
@@ -1802,19 +1448,14 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
 #ifdef CFG_DEBUG
             UT_ASSERT(Se2 >= 0 && e2Max >= 0);
 #endif
-            //////////////////////////////////////////////////////////////////////////
             if (Se2 < Se2Min)
             {
                 Se2Min = Se2;
                 e2MaxMin = e2Max;
                 m_xsGN = m_xs;
             }
-            //////////////////////////////////////////////////////////////////////////
-//#if 0
 #if 1
             beta = Se2 / Se2Pre;
-#else
-            beta = -m_zs.Dot(m_drs) / Se2Pre;
 #endif
 #ifdef CFG_VERBOSE
             if (m_verbose >= 3)
@@ -1859,24 +1500,6 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
 #endif
             }
 #endif
-            //////////////////////////////////////////////////////////////////////////
-            // if (cnt == BA_PCG_MIN_ITERATIONS) {
-            //  scc = true;
-            //  break;
-            //}
-            // if (Se2Min <= Se2ConvMin && m_iIterPCG >= BA_PCG_MIN_ITERATIONS)
-            // {
-            //  scc = true;
-            //  break;
-            //}
-            //////////////////////////////////////////////////////////////////////////
-//#ifdef CFG_DEBUG
-#if 0
-      ApplyA(m_xs, &m_drs);
-      m_drs -= m_bs;
-      m_drs.MakeMinus();
-      m_drs -= m_rs;
-#endif
             const int i =
                 (Se2Min <= Se2ConvMin && m_iIterPCG >= BA_PCG_MIN_ITERATIONS)
                     ? 0
@@ -1891,15 +1514,6 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
                 scc = false;
                 break;
             }
-            //////////////////////////////////////////////////////////////////////////
-            // if (Se2 < Se2Pre) {
-            //  m_ps *= beta;
-            //  m_ps += m_zs;
-            //} else {
-            //  //m_ps = m_zs;
-            //  break;
-            //}
-            //////////////////////////////////////////////////////////////////////////
             m_ps *= beta;
             m_ps += m_zs;
             ApplyA(m_ps, &m_drs);
@@ -1910,7 +1524,7 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
 #else
             if (!std::isfinite(alpha))
             {
-#endif // _MSC_VER
+#endif
                 scc = false;
                 break;
             }
@@ -1918,33 +1532,11 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
             m_rs -= m_drs;
             m_ps.GetScaled(alpha, m_dxs);
             m_xs += m_dxs;
-//#ifdef CFG_DEBUG
-#if 0
-      if (m_iIter == 3) {
-        ConvertCameraUpdates(m_xs.Data(), &m_xp2s, &m_xr2s);
-        UT::Print("%d %f\n", m_iIterPCG, sqrtf(m_xr2s.Mean()) * UT_FACTOR_RAD_TO_DEG);
-      }
-#endif
 #ifdef GBA_DEBUG_PCG_SAVE_RESULT
             m_xs.SaveB(UT::FileNameIncreaseSuffix(xFileName, m_iIterPCG + 1));
 #endif
 #ifdef GBA_DEBUG_PCG_LOAD_RESULT
             m_xs.LoadB(UT::FileNameIncreaseSuffix(xFileName, m_iIterPCG + 1));
-#endif
-            //////////////////////////////////////////////////////////////////////////
-            // ApplyA(m_xs, &m_drs);
-            // m_rs = m_bs;
-            // m_rs -= m_drs;
-            //////////////////////////////////////////////////////////////////////////
-//#ifdef CFG_DEBUG
-#if 0
-      if (m_iIterPCG == 0) {
-        m_bs.AssertEqual(UT::String("%sb_%02d.txt", dir.c_str(), m_iIter), 2, "", -1.0f, -1.0f);
-      }
-      m_xs.AssertEqual(UT::String("%sx_%02d_%02d.txt", dir.c_str(), m_iIter, m_iIterPCG), 2, "", -1.0f, -1.0f);
-      m_rs.AssertEqual(UT::String("%sr_%02d_%02d.txt", dir.c_str(), m_iIter, m_iIterPCG), 2, "", -1.0f, -1.0f);
-      m_ps.AssertEqual(UT::String("%sp_%02d_%02d.txt", dir.c_str(), m_iIter, m_iIterPCG), 2, "", -1.0f, -1.0f);
-      m_zs.AssertEqual(UT::String("%sz_%02d_%02d.txt", dir.c_str(), m_iIter, m_iIterPCG), 2, "", -1.0f, -1.0f);
 #endif
         }
 #ifdef GBA_DEBUG_PCG_SAVE_RESIDUAL
@@ -1956,24 +1548,9 @@ bool GlobalBundleAdjustor::SolveSchurComplementPCG()
     {
         m_iIterPCG = 0;
     }
-//#ifdef CFG_DEBUG
-#if 0
-  const Residual R = ComputeResidual(m_xsGN, true);
-#endif
-    //////////////////////////////////////////////////////////////////////////
-    // m_xsGN = m_xs;
-    //////////////////////////////////////////////////////////////////////////
     m_xsGN.MakeMinus();
     ConvertCameraUpdates(m_xsGN.Data(), &m_xp2s, &m_xr2s);
     ConvertMotionUpdates(m_xsGN.Data() + Ncp, &m_xv2s, &m_xba2s, &m_xbw2s);
-//#ifdef CFG_DEBUG
-#if 0
-#ifdef WIN32
-  m_xsGN.AssertEqual(UT::String("%sx_%02d.txt", dir.c_str(), m_iIter), 2, "", -1.0f, -1.0f);
-#else
-  m_xsGN.SaveB(UT::String("%sx_%02d.txt", dir.c_str(), m_iIter));
-#endif
-#endif
     return scc;
 }
 
@@ -2085,43 +1662,10 @@ void GlobalBundleAdjustor::PrepareConditioner()
         m_Mcs.Resize(Nc);
         for (int ic = 0; ic < Nc; ++ic)
         {
-//#ifdef CFG_DEBUG
-#if 0
-      if (m_iIter == 3 && ic == 136) {
-        UT::DebugStart();
-        LA::AlignedMatrix3x3f A, B, M1, M2, I1, I2;
-        LA::SymmetricMatrix3x3d C, M3;
-        m_SAcus[ic].m_A.Get00(&A);
-        //const float s = 1.0e-7f;
-        const float s = 1.0e-5f;
-        //const float s = 1.0e-2f;
-        //const float s = 1.0f;
-        A.GetScaled(s, B);
-        B.GetInverse(M1);
-        B.GetInverseLDL(M2);
-        M1 *= s;
-        M2 *= s;
-        C.Set(B);
-        C.GetInverse(M3);
-        M3 *= s;
-        LA::AlignedMatrix3x3f::AB(A, M1, I1);
-        LA::AlignedMatrix3x3f::AB(A, M2, I2);
-        A.Print(" A = ", false);
-        B.Print(" B = ", false);
-        M1.Print("M1 = ", false);
-        M2.Print("M2 = ", false);
-        M3.Print("M3 = ", false);
-        I1.Print("I1 = ", false);
-        I2.Print("I2 = ", false);
-        UT::DebugStop();
-      }
-#endif
             m_Mcs[ic].Set(m_SAcus[ic],
                 BA_PCG_CONDITIONER_MAX,
                 BA_PCG_CONDITIONER_EPSILON,
                 epsc);
-            // m_Mcs[ic].Set(m_Acus[ic], BA_PCG_CONDITIONER_MAX,
-            // BA_PCG_CONDITIONER_EPSILON, epsc);
         }
         m_MmsLM.Resize(Nm);
         for (int im = 0; im < Nm; ++im)
@@ -2133,25 +1677,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
         }
         return;
     }
-    // m_ss.Resize(Nc * pc + Nm * pm);
-    // LA::Vector6f *scs = (LA::Vector6f *) m_ss.Data();
-    // LA::Vector9f *sms = (LA::Vector9f *) (scs + Nc);
-    // for (int ic = 0; ic < Nc; ++ic) {
-    //  m_Acus[ic].GetDiagonal(scs[ic]);
-    //}
-    // for (int im = 0; im < Nm; ++im) {
-    //  m_AmusLM[im].GetDiagonal(sms[im]);
-    //}
-    // m_ss.MakeSquareRoot();
-    // m_ss.MakeInverse();
-#if 0
-//#if 1
-  UT::DebugStart();
-  m_ss.Set(1.0f);
-  UT::DebugStop();
-#endif
-    // LA::ProductVector6f sc;
-    // LA::AlignedVector9f sm;
     m_Mcc.Resize(Nc, Nb);
     m_MccT.Resize(Nc, Nb);
     m_McmLM.Resize(Nm, 2);
@@ -2164,9 +1689,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
     for (int ic = 0; ic < Nc; ++ic)
     {
         m_Mcc[ic][0] = m_Acus[ic];
-        // sc.Set(scs[ic]);
-        // m_Acus[ic].GetScaledColumn(sc, m_Mcc[ic][0]);
-        // m_Mcc[ic][0].ScaleRow(scs[ic]);
         const LA::AlignedMatrix6x6f* Acbs = m_Acbs.Data() + m_iKF2cb[ic];
         const KeyFrame& KF = m_KFs[ic];
         const int Nkp = static_cast<int>(KF.m_ikp2KF.size());
@@ -2178,21 +1700,12 @@ void GlobalBundleAdjustor::PrepareConditioner()
                 continue;
             }
             m_Mcc[_ic][ib] = Acbs[ikp];
-            // Acbs[ikp].GetScaledColumn(sc, m_Mcc[_ic][ib]);
-            // m_Mcc[_ic][ib].ScaleRow(scs[_ic]);
         }
     }
     for (int ic = Nc - Nm, im = 0; ic < Nc; ++ic, ++im)
     {
         m_McmLM[im][0] = m_SAcmsLM[im].m_Au.m_Acm;
         m_MmmLM[im][0] = m_AmusLM[im];
-        // if (im == 0) {
-        //  sm.Set(sms[im]);
-        //}
-        // m_SAcmsLM[im].m_Au.m_Acm.GetScaledColumn(sm, m_McmLM[im][0]);
-        // m_McmLM[im][0].ScaleRow(scs[ic]);
-        // m_AmusLM[im].GetScaledColumn(sm, m_MmmLM[im][0]);
-        // m_MmmLM[im][0].ScaleRow(sms[im]);
         const int _im = im + 1;
         if (_im == Nm)
         {
@@ -2201,16 +1714,9 @@ void GlobalBundleAdjustor::PrepareConditioner()
         const Camera::Factor::Binary& Ab = m_SAcmsLM[_im].m_Ab;
         m_McmLM[im][1] = Ab.m_Acm;
         m_MmmLM[im][1] = Ab.m_Amm;
-        // sm.Set(sms[_im]);
-        // Ab.m_Acm.GetScaledColumn(sm, m_McmLM[im][1]);
-        // m_McmLM[im][1].ScaleRow(scs[ic]);
-        // Ab.m_Amm.GetScaledColumn(sm, m_MmmLM[im][1]);
-        // m_MmmLM[im][1].ScaleRow(sms[im]);
 
         LA::AlignedMatrix9x6f* Amcs = m_MmcLM[im];
         Amcs[0] = Ab.m_Amc;
-        // Ab.m_Amc.GetScaledColumn(scs[ic + 1], Amcs[0]);
-        // Amcs[0].ScaleRow(sms[im]);
         const int Nbm = (im + Nb > Nm ? Nm - im : Nb) - 1;
         for (int ib = 1; ib < Nbm; ++ib)
         {
@@ -2258,25 +1764,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
     }
     g_A.SetLowerFromUpper();
     g_M = g_A;
-    // g_S.Resize(N, N);   g_S.MakeZero();
-    // g_SI.Resize(N, N);  g_SI.MakeZero();
-    // for (int ic = 0, im = Nm - Nc, icp = 0, imp = pc; ic < Nc; ++ic, ++im,
-    // icp += pcm, imp += pcm) {
-    //  const float *sc = scs[ic];
-    //  for (int ip = 0, jcp = icp; ip < pc; ++ip, ++jcp) {
-    //    g_S(jcp, jcp) = sc[ip];
-    //    g_SI(jcp, jcp) = 1 / sc[ip];
-    //  }
-    //  if (im < 0) {
-    //    continue;
-    //  }
-    //  const float *sm = sms[im];
-    //  for (int ip = 0, jmp = imp; ip < pm; ++ip, ++jmp) {
-    //    g_S(jmp, jmp) = sm[ip];
-    //    g_SI(jmp, jmp) = 1 / sm[ip];
-    //  }
-    //}
-    // g_M = EigenMatrixXd(g_S * g_A * g_S);
     g_Ms.resize(0);
 #endif
 
@@ -2305,28 +1792,10 @@ void GlobalBundleAdjustor::PrepareConditioner()
         const int Nbmc = im >= 0 ? Nbcc - 1 : 0;
         const int Nbmm = Nbcm;
 #ifdef GBA_DEBUG_EIGEN_PCG
-        //#if 0
         const int icp = ic * pcm, imp = icp + pc;
         g_M.Marginalize(icp, pc, e_epsc, false, false);
-//#ifdef CFG_DEBUG
-#if 0
-    const EigenMatrixXd e_Aii = EigenMatrixXd(g_M.block<pm, pm>(imp, imp));
-    const EigenMatrixXd e_Mii = e_Aii.GetInverseLDL(e_epsm);
-    const int imChk = 4;
-    //if (im == imChk) {
-    //  UT::PrintSeparator();
-    //  EigenMatrix9x9f(e_Aii.cast<float>()).Print(true);
-    //}
-#endif
         g_M.Marginalize(imp, pm, e_epsm, false, false);
         g_Ms.push_back(g_M);
-//#ifdef CFG_DEBUG
-#if 0
-    if (UT::Debugging()) {
-      UT::PrintSeparator();
-      EigenMatrix9x9f(g_M.block<pm, pm>(imp, imp).cast<float>()).Print(true);
-    }
-#endif
 #endif
         LA::AlignedMatrix6x6f& Mcc = Mccs[0];
         if (Mcc.InverseLDL(epsc))
@@ -2377,25 +1846,10 @@ void GlobalBundleAdjustor::PrepareConditioner()
                         McmT, _AccsT[jb], _MmcsLM[jb]);
                 }
                 LA::AlignedMatrix9x9f* _MmmsLM = m_MmmLM[_im];
-//#ifdef CFG_DEBUG
-#if 0
-        if (im == imChk && _im == imChk) {
-          LA::AlignedMatrix9x9f T;
-          LA::AlignedMatrix9x9f::ABT(McmT, AcmsTLM[ib], T);
-          UT::Print("%e + %e = %f\n", _MmmsLM[0][0][3], T[0][3], _MmmsLM[0][0][3] + T[0][3]);
-        }
-#endif
                 LA::AlignedMatrix9x9f::AddABTToUpper(
                     McmT, AcmsTLM[ib], _MmmsLM[0]);
 #ifdef GBA_DEBUG_EIGEN_PCG
                 _MmmsLM[0].SetLowerFromUpper();
-#endif
-//#ifdef CFG_DEBUG
-#if 0
-        if (im == imChk && _im == imChk) {
-          UT::PrintSeparator();
-          _MmmsLM[0].Print(true);
-        }
 #endif
                 if (ib == 0 && Nbcm == 2)
                 {
@@ -2422,32 +1876,10 @@ void GlobalBundleAdjustor::PrepareConditioner()
             continue;
         }
         LA::AlignedMatrix9x9f& Mmm = MmmsLM[0];
-//#ifdef CFG_DEBUG
-#if 0
-    if (im == imChk) {
-      /*const */LA::AlignedMatrix9x9f Aii = Mmm;
-      //EigenMatrix9x9f(e_Aii.cast<float>()).AssertEqual(Aii, 2, "", -1.0f, -1.0f);
-      EigenMatrix9x9f(e_Aii.cast<float>()).Get(Aii);
-      const LA::AlignedMatrix9x9f Mii = Aii.GetInverseLDL(epsm);
-      //EigenMatrix9x9f(e_Mii.cast<float>()).AssertEqual(Mii, 2, "", -1.0f, -1.0f);
-      UT::PrintSeparator();
-      EigenMatrix9x9f((e_Aii * e_Mii).cast<float>()).Print(true);
-      UT::PrintSeparator();
-      EigenMatrix9x9f(EigenMatrix9x9f(Aii) * EigenMatrix9x9f(Mii)).Print(true);
-    }
-#endif
         if (Mmm.InverseLDL(epsm))
         {
             MmmsTLM[0] = Mmm;
             Mmm.MakeMinus();
-//#ifdef CFG_DEBUG
-#if 0
-      if (UT::Debugging()) {
-        UT::PrintSeparator();
-        Mmm.Print(true);
-        UT::DebugStop();
-      }
-#endif
             for (int ib = 0; ib < Nbmc; ++ib)
             {
                 MmcsLM[ib].GetTranspose(AmcsTLM[ib]);
@@ -2491,14 +1923,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
                     LA::AlignedMatrix9x9f::AddABTTo(
                         MmmT, AmcsTLM[jb], _Mmcs[jb]);
                 }
-#if 0
-        if (UT::Debugging()) {
-          LA::AlignedMatrix9x9f T;
-          LA::AlignedMatrix9x9f::ABT(MmmT, AmmsTLM[1], T);
-          UT::Print("%f + %f = %f\n", m_MmmLM[_im][0][0][3], T[0][3], m_MmmLM[_im][0][0][3] + T[0][3]);
-          UT::DebugStop();
-        }
-#endif
                 LA::AlignedMatrix9x9f::AddABTToUpper(
                     MmmT, AmmsTLM[1], m_MmmLM[_im][0]);
 #ifdef GBA_DEBUG_EIGEN_PCG
@@ -2533,9 +1957,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
             {
                 const EigenMatrix6x6f e_Mcc =
                     g_M.block<pc, pc>(icp1, icp2).cast<float>();
-                // e_Mcc.AssertEqual(m_Mcc[ic1][ib], 1,
-                // UT::String("Mcc[%d][%d]", ic1, ic2)); g_M.block<pc, pc>(icp1,
-                // icp2) = EigenMatrix6x6f(m_Mcc[ic1][ib]).cast<double>();
                 e_Mcc.Get(m_Mcc[ic1][ib]);
             }
             if (im1 >= 0)
@@ -2545,10 +1966,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
                 {
                     const EigenMatrix6x9f e_Mcm =
                         g_M.block<pc, pm>(icp1, imp2).cast<float>();
-                    // e_Mcm.AssertEqual(m_McmLM[ic1][ib], 1,
-                    // UT::String("Mcm[%d][%d]", ic1, im2)); g_M.block<pc,
-                    // pm>(icp1, imp2) =
-                    // EigenMatrix6x9f(m_McmLM[ic1][ib]).cast<double>();
                     e_Mcm.Get(m_McmLM[ic1][ib]);
                 }
                 for (int ib = 0, ic2 = ic1 + 1, icp2 = icp1 + pcm; ib < Nbmc1;
@@ -2556,10 +1973,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
                 {
                     const EigenMatrix9x6f e_Mmc =
                         g_M.block<pm, pc>(imp1, icp2).cast<float>();
-                    // e_Mmc.AssertEqual(m_MmcLM[im1][ib], 1,
-                    // UT::String("Mmc[%d][%d]", im1, ic2)); g_M.block<pm,
-                    // pc>(imp1, icp2) =
-                    // EigenMatrix9x6f(m_MmcLM[im1][ib]).cast<double>();
                     e_Mmc.Get(m_MmcLM[im1][ib]);
                 }
                 for (int ib = 0, im2 = im1, imp2 = imp1; ib < Nbmm1;
@@ -2567,10 +1980,6 @@ void GlobalBundleAdjustor::PrepareConditioner()
                 {
                     const EigenMatrix9x9f e_Mmm =
                         g_M.block<pm, pm>(imp1, imp2).cast<float>();
-                    // e_Mmm.AssertEqual(m_MmmLM[im1][ib], 1,
-                    // UT::String("Mmm[%d][%d]", im1, im2)); g_M.block<pm,
-                    // pm>(imp1, imp2) =
-                    // EigenMatrix9x9f(m_MmmLM[im1][ib]).cast<double>();
                     e_Mmm.Get(m_MmmLM[im1][ib]);
                 }
             }
@@ -2929,7 +2338,6 @@ void GlobalBundleAdjustor::ApplyM(
         }
 #endif
     }
-    // Mxs->Scale(m_ss);
 }
 
 void GlobalBundleAdjustor::ApplyA(
@@ -3165,10 +2573,6 @@ void GlobalBundleAdjustor::SolveBackSubstitution()
     for (int iKF = 0; iKF < nKFs; ++iKF)
     {
         const KeyFrame& KF = m_KFs[iKF];
-        // const int Nx = static_cast<int>(KF.m_xs.size());
-        // if (Nx == 0) {
-        //  continue;
-        //}
         const bool dc = m_xr2s[iKF] > BA_BACK_SUBSTITUTE_ROTATION ||
                         m_xp2s[iKF] > BA_BACK_SUBSTITUTE_POSITION;
         if (dc)
@@ -3239,9 +2643,6 @@ void GlobalBundleAdjustor::SolveBackSubstitution()
     const LA::Vector6f* xcs = (LA::Vector6f*)m_xsGN.Data();
     for (int iKF = 0; iKF < nKFs; ++iKF)
     {
-        // if (!(m_ucs[iKF] & GBA_FLAG_FRAME_UPDATE_BACK_SUBSTITUTION)) {
-        //  continue;
-        //}
         const ubyte dx = m_ucs[iKF] & GBA_FLAG_FRAME_UPDATE_DELTA;
         if (dx)
         {
@@ -3313,11 +2714,6 @@ void GlobalBundleAdjustor::SolveBackSubstitution()
                 continue;
             }
             xds[ix] = -xds[ix];
-            // if (Depth::InverseGaussian::Valid(xds[ix] + ds[ix].u())) {
-            //  continue;
-            //}
-            // xds[ix] = 0.0f;
-            // uds[ix] &= ~GBA_FLAG_TRACK_UPDATE_BACK_SUBSTITUTION;
         }
     }
     for (int iKF = 0; iKF < nKFs; ++iKF)
@@ -3358,15 +2754,6 @@ void GlobalBundleAdjustor::SolveBackSubstitution()
 #endif
     PushDepthUpdates(m_xds, &m_xsGN);
     m_x2GN = m_xsGN.SquaredLength();
-//#ifdef CFG_DEBUG
-#if 0
-  const std::string dir = m_dir + "pcg/";
-#ifdef WIN32
-  m_xsGN.AssertEqual(UT::String("%sx%02d.txt", dir.c_str(), m_iIter), 2, "", -1.0f, -1.0f);
-#else
-  m_xsGN.SaveB(UT::String("%sx%02d.txt", dir.c_str(), m_iIter));
-#endif
-#endif
 }
 
 void GlobalBundleAdjustor::SolveBackSubstitutionGT(
@@ -3410,80 +2797,6 @@ bool GlobalBundleAdjustor::EmbeddedMotionIteration()
     LA::Vector9f* xms = (LA::Vector9f*)(xcs + Nm);
     // const float eps = 0.0f;
     const float eps = FLT_EPSILON;
-#if 0
-//#if 1
-  AlignedVector<LA::AlignedMatrix9x9f> Amus, Ambs;
-  AlignedVector<LA::AlignedVector9f> bms;
-  m_work.Resize((Amus.BindSize(Nm) + Ambs.BindSize(Nm - 1) + bms.BindSize(Nm)) / sizeof(float));
-  Amus.Bind(m_work.Data(), Nm);
-  Ambs.Bind(Amus.End(), Nm - 1);
-  bms.Bind(Ambs.End(), Nm);
-
-  LA::AlignedVector6f xc[2];
-  LA::AlignedMatrix9x6f Amc;
-  for (int im = 0, r = 0; im < Nm; ++im, r = 1 - r) {
-    const Camera::Factor &A = m_SAcmsLM[im];
-    LA::AlignedVector9f &bm = bms[im];
-    A.m_Au.m_Amm.Get(&Amus[im], &bm);
-    xc[r].Set(xcs[im]);
-    A.m_Au.m_Acm.GetTranspose(Amc);
-    LA::AlignedMatrix9x6f::AddAbTo(Amc, xc[r], bm);
-    if (im == 0) {
-      continue;
-    }
-    const int _im = im - 1;
-    Ambs[_im] = A.m_Ab.m_Amm;
-    A.m_Ab.m_Acm.GetTranspose(Amc);
-    LA::AlignedMatrix9x6f::AddAbTo(Amc, xc[1 - r], bm);
-    LA::AlignedMatrix9x6f::AddAbTo(A.m_Ab.m_Amc, xc[r], bms[_im]);
-  }
-#if 0
-  if (Nm > 0) {
-    UT::DebugStart();
-    LA::AlignedMatrix9x9f &Am = Amus[Nm - 1];
-    Am[0][0] = Am[1][1] = Am[2][2] = FLT_EPSILON;
-    UT::DebugStop();
-  }
-#endif
-  LA::AlignedMatrix9x9f Am21, Mm21;
-  LA::AlignedVector9f bm1;
-  for (int im1 = 0, im2 = 1; im1 < Nm; im1 = im2++) {
-    LA::AlignedMatrix9x9f &Mm11 = Amus[im1];
-    //if (im1 == 1) {
-    //  Mm11.Print(true);
-    //  UT::PrintSeparator();
-    //}
-    if (!Mm11.InverseLDL(eps)) {
-      //return false;
-      Mm11.MakeZero();
-      if (im2 < Nm) {
-        Ambs[im1].MakeZero();
-      }
-      bms[im1].MakeZero();
-      continue;
-    }
-    bm1 = bms[im1];
-    LA::AlignedMatrix9x9f::Ab(Mm11, bm1, bms[im1]);
-    if (im2 == Nm) {
-      break;
-    }
-    Ambs[im1].GetTranspose(Am21);
-    LA::AlignedMatrix9x9f::ABT(Am21, Mm11, Mm21);
-    Mm21.GetTranspose(Ambs[im1]);
-    //UT::PrintSeparator();
-    //Amus[im2].Print(true);
-    LA::AlignedMatrix9x9f::SubtractABTFromUpper(Mm21, Am21, Amus[im2]);
-    //UT::PrintSeparator();
-    //Amus[im2].Print(true);
-    LA::AlignedMatrix9x9f::SubtractAbFrom(Mm21, bm1, bms[im2]);
-  }
-  for (int im1 = Nm - 2, im2 = im1 + 1; im1 >= 0; im2 = im1--) {
-    LA::AlignedMatrix9x9f::SubtractAbFrom(Ambs[im1], bms[im2], bms[im1]);
-  }
-  for (int im = 0; im < Nm; ++im) {
-    xms[im].Set(bms[im]);
-  }
-#else
     const int Nmr = Nc * pm, Nmc = pm + pm;
     LA::AlignedMatrixXf A;
     LA::AlignedVectorXf b, ai;
@@ -3592,7 +2905,6 @@ bool GlobalBundleAdjustor::EmbeddedMotionIteration()
     {
         xms[im].Set(x[im]);
     }
-#endif
     m_xsGN.MakeMinus(pc * Nc);
     ConvertMotionUpdates((float*)xms, &m_xv2s, &m_xba2s, &m_xbw2s);
     return true;
@@ -3699,16 +3011,11 @@ void GlobalBundleAdjustor::EmbeddedPointIteration(
     id2z[0] = 0;
     for (int id = 0, iz = 0; id < Nd; ++id)
     {
-//#ifdef CFG_DEBUG
-#if 0
-    UT_ASSERT(Nzs[id] > 0);
-#endif
         id2z[id + 1] = id2z[id] + Nzs[id];
     }
     m_zds.resize(id2z[Nd]);
 
     LA::Vector3f Rx;
-    // LA::SymmetricMatrix2x2f W;
     Nt = 0;
     memset(Nzs, 0, sizeof(int) * Nd);
     for (int iKF = 0; iKF < nKFs; ++iKF)
@@ -3729,7 +3036,6 @@ void GlobalBundleAdjustor::EmbeddedPointIteration(
                     continue;
                 }
                 Rx.Set(x.m_x.x(), x.m_x.y(), 1.0f);
-                // x.m_Wr.GetScaled(KF.m_Ards[ix].m_wx, W);
                 const LA::SymmetricMatrix2x2f& W = x.m_Wr;
                 const int iz = id2z[id] + Nzs[id]++;
                 m_zds[iz].Set(m_K.m_br, Rx, x.m_xr, W);
@@ -3789,7 +3095,6 @@ void GlobalBundleAdjustor::EmbeddedPointIteration(
                     m_zds[i].Set(t[1], Rx, z.m_zr, W);
                 }
 #else
-                // z.m_W.GetScaled(KF.m_Lzs[iz].m_wx, W);
                 const LA::SymmetricMatrix2x2f& W = z.m_W;
                 const int i = ++Nzs[id];
                 m_zds[i].Set(*t, Rx, z.m_z, z.m_W);

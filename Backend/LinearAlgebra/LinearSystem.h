@@ -239,6 +239,7 @@ inline bool InverseLDL(const int N, TYPE** A, const TYPE* eps = NULL,
 
 #ifdef CFG_DEBUG_EIGEN
 #include <Eigen/Eigen>
+
 template <int N, int Nm>
 inline void EigenMarginalize(
     Eigen::Matrix<float, N, N>& e_A, Eigen::Matrix<float, N, 1>& e_b)
@@ -248,6 +249,7 @@ inline void EigenMarginalize(
     e_A.block(Nm, 0, N - Nm, N) -= e_M * e_A.block(0, 0, Nm, N);
     e_b.block(Nm, 0, N - Nm, 1) -= e_M * e_b.block(0, 0, Nm, 1);
 }
+
 template <typename TYPE, int N>
 inline Eigen::Matrix<TYPE, N, N> EigenSqrt(const Eigen::Matrix<TYPE, N, N>& e_A)
 {
@@ -261,6 +263,7 @@ inline Eigen::Matrix<TYPE, N, N> EigenSqrt(const Eigen::Matrix<TYPE, N, N>& e_A)
     }
     return e_U * e_S.asDiagonal() * e_U.transpose();
 }
+
 template <typename TYPE>
 inline void EigenDecomposeLDL(
     const Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&
@@ -293,6 +296,7 @@ inline void EigenDecomposeLDL(
         (*e_d)(i, 0) = aii == 0 ? 0 : 1 / aii;
     }
 }
+
 template <typename TYPE>
 inline TYPE EigenConditionNumber(
     const Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&
@@ -310,6 +314,7 @@ inline TYPE EigenConditionNumber(
     }
     return cond;
 }
+
 template <typename TYPE>
 inline int EigenRankLU(
     const Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&
@@ -320,6 +325,7 @@ inline int EigenRankLU(
         e_lu(e_A);
     return int(e_lu.rank());
 }
+
 template <typename TYPE>
 inline int EigenRankQR(
     const Eigen::Matrix<TYPE, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&

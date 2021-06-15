@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-#ifndef _INPUT_SEQUENCE_H_
-#define _INPUT_SEQUENCE_H_
-//#ifndef CFG_DEBUG
-//#define CFG_DEBUG
-//#endif
+#pragma once
 
 #include "CameraTrajectory.h"
 #include "Configurator.h"
@@ -128,7 +124,6 @@ public:
         const double fps = cfgor.GetArgument("input_fps", 30.0);
         const bool tReset = cfgor.GetArgument("input_time_reset", 0) != 0;
         const double tFactor = cfgor.GetArgument("input_time_factor", 1.0e-4);
-        // m_tFirst = cfgor.GetArgument("input_time_first", DBL_MAX);
         m_tFirst = cfgor.GetArgument("input_time_first", 0.0);
         m_dt = 1.0 / fps;
 
@@ -197,8 +192,6 @@ public:
             const bool csv = UT::FileNameExtractExtension(fileIMU) == "csv";
             const bool na =
                 cfgor.GetArgument("input_imu_minus_acceleration", 0) != 0;
-            // while (UT::Load<double>(t, fp) && UT::Load<float>(u.m_a, 3, fp)
-            // && UT::Load<float>(u.m_w, 4, fp)) {
             while (fgets(line, UT_STRING_WIDTH_MAX, fp))
             {
                 if (csv && sscanf(line,
@@ -372,10 +365,7 @@ public:
             }
 #endif
         }
-//#if 0
-#if 1
         IBA::PrintCalibration(m_K);
-#endif
         Rigid3D Tu;
         Tu.Set(m_K.Tu);
         if (cfgor.GetArgument("tune_imu_calibration", 0))
@@ -432,8 +422,6 @@ public:
             cfgor.GetArgument("input_ground_truth_time_factor", tFactor);
         const double tFirstGT =
             cfgor.GetArgument("input_ground_truth_time_first", m_tFirst);
-        // const float dtMaxGT =
-        // cfgor.GetArgument("input_ground_truth_max_time_difference", FLT_MAX);
         const float dtMaxGT = cfgor.GetArgument(
             "input_ground_truth_max_time_difference", 1.0e-2f);
         const bool inverse =
@@ -472,7 +460,6 @@ public:
             UT_ASSERT(m_XsGT.size() == m_ts.size());
 #endif
             ConvertCameras(m_XsGT, &m_CTGT.m_Cs, &m_CTGT.m_ba, &m_CTGT.m_bw);
-            // CameraTrajectory::TransformPose(Ts, m_CTGT.m_Cs);
             if (Ru)
             {
                 CameraTrajectory::TransformBias(
@@ -494,7 +481,6 @@ public:
                      &Ts,
                      Ru))
         {
-            // if (dtMaxGT != FLT_MAX) {
             if (dtMaxGT >= 0.0f && dtMaxGT != FLT_MAX)
             {
                 CameraTrajectory CTGT;
@@ -659,7 +645,6 @@ public:
                 }
             }
         }
-        // return true;
     }
 
     inline int Size() const { return static_cast<int>(m_filesImg.size()); }
@@ -738,45 +723,6 @@ public:
                         X.zs.resize(j);
                     }
                 }
-#if 0
-        if (!KF->Xs.empty()) {
-          std::vector<ubyte> kfs(iFrm + 1, 0);
-          const std::vector<int> &iFrmsKF = solver->GetKeyFrameIndexes();
-          const int nKFs = static_cast<int>(iFrmsKF.size());
-          for (int iKF = 0; iKF < nKFs; ++iKF) {
-            kfs[iFrmsKF[iKF]] = 1;
-          }
-          kfs[KF->iFrm] = 1;
-          int iX, jX, i, j;
-          const int NX = static_cast<int>(KF->Xs.size());
-          for (iX = jX = 0; iX < NX; ++iX) {
-            IBA::MapPoint &X = KF->Xs[iX];
-            const int Nz = static_cast<int>(X.zs.size());
-            for (i = j = 0; i < Nz; ++i) {
-              const IBA::MapPointMeasurement &z = X.zs[i];
-              if (kfs[z.iFrm]) {
-                X.zs[j++] = z;
-              }
-            }
-            if (j == 1 && X.zs.front().iFrm != KF->iFrm) {
-              j = 0;
-            }
-            X.zs.resize(j);
-            if (!X.zs.empty()) {
-              KF->Xs[jX++] = X;
-            }
-          }
-          KF->Xs.resize(jX);
-        }
-        if (KF->Xs.size() < KF_MIN_FEATURE_SROUCES && KF->zs.size() >= KF_MIN_FEATURE_MEASUREMENTS &&
-            iFrm >= KF_FIRST_LOCAL_FRAMES &&
-            (KF_MIN_FRAME_STEP <= 0 || iFrm - solver->GetKeyFrameIndex(solver->GetKeyFrames() - 1) != KF_MIN_FRAME_STEP) &&
-            (m_kfs.empty() || (m_kfs[iFrm] != 2 && (m_kfs[iFrm] != 1 || KF_MIN_FRAME_STEP != -1)))) {
-          KF->iFrm = -1;
-          KF->zs.resize(0);
-          KF->Xs.resize(0);
-        }
-#endif
             }
 #ifdef CFG_DEBUG
             if (!m_ius.empty())
@@ -971,4 +917,3 @@ public:
     std::vector<int> m_iFrm2Z;
     std::vector<IBA::RelativeConstraint> m_Zs;
 };
-#endif

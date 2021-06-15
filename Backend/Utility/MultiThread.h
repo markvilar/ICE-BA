@@ -15,42 +15,88 @@
  *****************************************************************************/
 #pragma once
 
+#include "Utility.h"
+#include <boost/thread/condition.hpp>
+
+#ifdef __ARM_NEON__
+#include <sched.h>
+#include <string.h>
+#include <unistd.h>
+#endif // __ARM_NEON__
+
+#include <condition_variable>
+#include <thread>
+#include <shared_mutex>
+
+// TODO __CYGWIN__ for now uses pthread API instead of Win32 API
+
 // TODO Update to use c++11 std::mutex & lock
-#define MT_SCOPE_LOCK_BEGIN(m)                                                 \
-    {                                                                          \
-        boost::mutex::scoped_lock sl(m);
+
+// ----------------------------------------------------------------------------
+// ---- SCOPE LOCK ------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+#define MT_SCOPE_LOCK_BEGIN(m) \
+    {                              \
+        std::scoped_lock sl(m);
 #define MT_SCOPE_LOCK_END(m) }
+
+
 #ifdef CFG_DEBUG_MT
+
+// ----------------------------------------------------------------------------
+// ---- READ LOCK -------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 #define MT_READ_LOCK_BEGIN(m, iFrm, iTask)                                     \
     MT::Begin(iFrm, iTask);                                                    \
     {                                                                          \
-        boost::shared_lock<boost::shared_mutex> rl(m);
+        std::unique_lock<std::mutex> rl(m);
 
-#define MT_READ_LOCK_END(m, iFrm, iTask)                                       \
-    }                                                                          \
+#define MT_READ_LOCK_END(m, iFrm, iTask) \
+    }                                        \
     MT::End(iFrm, iTask);
 
-#define MT_WRITE_LOCK_BEGIN(m, iFrm, iTask)                                    \
-    MT::Begin(iFrm, iTask);                                                    \
-    {                                                                          \
-        boost::upgrade_lock<boost::shared_mutex> wl1(m);                       \
-        boost::upgrade_to_unique_lock<boost::shared_mutex> wl2(wl1);
+// ----------------------------------------------------------------------------
+// ---- WRITE LOCK ------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
-#define MT_WRITE_LOCK_END(m, iFrm, iTask)                                      \
-    }                                                                          \
+#define MT_WRITE_LOCK_BEGIN(m, iFrm, iTask) \
+    MT::Begin(iFrm, iTask);                 \
+    {                                       \
+        std::lock_guard<std::mutex> wl1(m); \
+
+#define MT_WRITE_LOCK_END(m, iFrm, iTask)   \
+    }                                       \
     MT::End(iFrm, iTask);
+
+
 #else
-#define MT_READ_LOCK_BEGIN(m, iFrm, iTask)                                     \
-    {                                                                          \
-        boost::shared_lock<boost::shared_mutex> rl(m);
+
+// ----------------------------------------------------------------------------
+// ---- READ LOCK -------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+#define MT_READ_LOCK_BEGIN(m, iFrm, iTask)  \
+    {                                       \
+        std::unique_lock<std::mutex> rl(m);
+
 #define MT_READ_LOCK_END(m, iFrm, iTask) }
-#define MT_WRITE_LOCK_BEGIN(m, iFrm, iTask)                                    \
-    {                                                                          \
-        boost::upgrade_lock<boost::shared_mutex> wl1(m);                       \
-        boost::upgrade_to_unique_lock<boost::shared_mutex> wl2(wl1);
+
+// ----------------------------------------------------------------------------
+// ---- WRITE LOCK ------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+#define MT_WRITE_LOCK_BEGIN(m, iFrm, iTask) \
+    {                                       \
+        std::lock_guard<std::mutex> wl1(m);                 
 
 #define MT_WRITE_LOCK_END(m, iFrm, iTask) }
+
+
 #endif
+
+
 
 #define MT_FLAG_DEFAULT 0
 #define MT_FLAG_SAVE 1
@@ -88,22 +134,6 @@
 #define MT_TASK_GBA_SynchronizeData 28
 #define MT_TASK_GBA_BufferDataEmpty 29
 
-#include "Utility.h"
-#include <boost/thread/condition.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/shared_mutex.hpp>
-#ifdef __ARM_NEON__
-#include <sched.h>
-#include <string.h>
-#include <unistd.h>
-#endif // __ARM_NEON__
-
-#ifdef WIN32
-#include "Windows.h"
-#else
-#include <thread>
-// TODO __CYGWIN__ for now uses pthread API instead of Win32 API
-#endif
 
 namespace MT
 {
@@ -126,9 +156,9 @@ public:
     virtual void Initialize(
         const int serial = 0, const int iCore = -1, const std::string name = "")
     {
-        m_serial = serial;
-        m_serialCnt = 0;
-        m_iCore = iCore;
+        m_Serial = serial;
+        m_SerialCount = 0;
+        m_ICore = iCore;
         m_name = name;
     }
 
@@ -138,13 +168,13 @@ public:
     {
         Reset();
         MT_WRITE_LOCK_BEGIN(m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        m_busy = 0;
-        m_stop = 0;
+        m_Busy = 0;
+        m_Stop = 0;
         MT_WRITE_LOCK_END(m_MT, MT_TASK_NONE, MT_TASK_NONE);
 #ifdef CFG_SERIAL
-        if (m_serial > 0)
+        if (m_Serial > 0)
         {
-            m_serialCnt = m_serial - 1;
+            m_SerialCount = m_Serial - 1;
         }
         else
 #endif // CFG_SERIAL
@@ -161,27 +191,27 @@ public:
     virtual void Stop()
     {
 #ifdef CFG_SERIAL
-        if (m_serial > 0)
+        if (m_Serial > 0)
         {
             return;
         }
 #endif
         Synchronize();
         MT_READ_LOCK_BEGIN(m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        if (m_stop == 2)
+        if (m_Stop == 2)
         {
             return;
         }
         MT_READ_LOCK_END(m_MT, MT_TASK_NONE, MT_TASK_NONE);
         MT_WRITE_LOCK_BEGIN(m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        m_stop = 1;
-        m_CDT.notify_all();
+        m_Stop = 1;
+        m_Condition.notify_all();
         MT_WRITE_LOCK_END(m_MT, MT_TASK_NONE, MT_TASK_NONE);
 
         MT_READ_LOCK_BEGIN(m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        while (m_stop != 2)
+        while (m_Stop != 2)
         {
-            m_CDT.wait(rl);
+            m_Condition.wait(rl);
         }
         MT_READ_LOCK_END(m_MT, MT_TASK_NONE, MT_TASK_NONE);
 #ifndef WIN32
@@ -192,19 +222,17 @@ public:
     virtual void WakeUp(const bool serial = false)
     {
 #ifdef CFG_SERIAL
-        if (m_serial > 0)
+        if (m_Serial > 0)
         {
-            if (++m_serialCnt == m_serial)
+            if (++m_SerialCount == m_Serial)
             {
-                m_serialCnt = 0;
+                m_SerialCount = 0;
                 Run();
             }
             return;
         }
 #endif
-        // printf("%s woke up\n", m_name.c_str());
-        m_CDT.notify_one();
-        // m_CDT.notify_all();
+        m_Condition.notify_one();
         if (serial)
         {
             Synchronize();
@@ -213,41 +241,37 @@ public:
 
     virtual void Run() = 0;
     virtual bool BufferDataEmpty() = 0;
-    virtual void SaveB(FILE* fp) { UT::SaveB(m_serialCnt, fp); }
-    virtual void LoadB(FILE* fp) { UT::LoadB(m_serialCnt, fp); }
+    virtual void SaveB(FILE* fp) { UT::SaveB(m_SerialCount, fp); }
+    virtual void LoadB(FILE* fp) { UT::LoadB(m_SerialCount, fp); }
 
 #ifdef WIN32
-    // TODO: Rename to "Spin" to avoid confusion with Run()
-    static inline DWORD WINAPI Run(LPVOID pParam)
+    static inline DWORD WINAPI Spin(LPVOID pParam)
     {
         Thread* pThread = (Thread*)pParam;
         while (1)
         {
             MT_READ_LOCK_BEGIN(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            while (pThread->BufferDataEmpty() && pThread->m_stop == 0)
+            while (pThread->BufferDataEmpty() && pThread->m_Stop == 0)
             {
-                // printf("%s waiting...(empty)\n", pThread->m_name.c_str());
-                pThread->m_CDT.wait(rl);
+                pThread->m_Condition.wait(rl);
             }
-            if (pThread->m_stop == 1)
+            if (pThread->m_Stop == 1)
             {
                 break;
             }
             MT_READ_LOCK_END(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
             MT_WRITE_LOCK_BEGIN(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            pThread->m_busy = 1;
+            pThread->m_Busy = 1;
             MT_WRITE_LOCK_END(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            // printf("%s running...", pThread->m_name.c_str());
             pThread->Run();
-            // printf("done\n");
             MT_WRITE_LOCK_BEGIN(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            pThread->m_busy = 0;
-            pThread->m_CDT.notify_one();
+            pThread->m_Busy = 0;
+            pThread->m_Condition.notify_one();
             MT_WRITE_LOCK_END(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
         }
         MT_WRITE_LOCK_BEGIN(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        pThread->m_stop = 2;
-        pThread->m_CDT.notify_all();
+        pThread->m_Stop = 2;
+        pThread->m_Condition.notify_all();
         MT_WRITE_LOCK_END(pThread->m_MT, MT_TASK_NONE, MT_TASK_NONE);
         return 0;
     }
@@ -256,47 +280,44 @@ public:
     {
 #ifdef __ARM_NEON__
 #ifndef __APPLE__
-        if (m_iCore >= -1)
+        if (m_ICore >= -1)
         {
             cpu_set_t set;
             CPU_ZERO(&set);
-            CPU_SET(m_iCore, &set);
+            CPU_SET(m_ICore, &set);
             if (0 != sched_setaffinity(getpid(), sizeof(cpu_set_t), &set))
             {
                 exit(1);
             }
             UT::Print(
-                "Bound thread %s to CPU CORE: #%d", m_name.c_str(), m_iCore);
+                "Bound thread %s to CPU CORE: #%d", m_name.c_str(), m_ICore);
         }
 #endif
 #endif // __ARM_NEON__
         while (1)
         {
             MT_READ_LOCK_BEGIN(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            while (this->BufferDataEmpty() && this->m_stop == 0)
+            while (this->BufferDataEmpty() && this->m_Stop == 0)
             {
-                // printf("%s waiting...(empty)\n", this->m_name.c_str());
-                this->m_CDT.wait(rl);
+                this->m_Condition.wait(rl);
             }
-            if (this->m_stop == 1)
+            if (this->m_Stop == 1)
             {
                 break;
             }
             MT_READ_LOCK_END(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
             MT_WRITE_LOCK_BEGIN(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            this->m_busy = 1;
+            this->m_Busy = 1;
             MT_WRITE_LOCK_END(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            // printf("%s running...", this->m_name.c_str());
             this->Run();
-            // printf("done\n");
             MT_WRITE_LOCK_BEGIN(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-            this->m_busy = 0;
-            this->m_CDT.notify_one();
+            this->m_Busy = 0;
+            this->m_Condition.notify_one();
             MT_WRITE_LOCK_END(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
         }
         MT_WRITE_LOCK_BEGIN(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        this->m_stop = 2;
-        this->m_CDT.notify_all();
+        this->m_Stop = 2;
+        this->m_Condition.notify_all();
         MT_WRITE_LOCK_END(this->m_MT, MT_TASK_NONE, MT_TASK_NONE);
     }
 #endif // WIN32
@@ -304,32 +325,32 @@ public:
     virtual void Synchronize()
     {
 #ifdef CFG_SERIAL
-        if (m_serial > 0)
+        if (m_Serial > 0)
         {
             return;
         }
 #endif
         MT_READ_LOCK_BEGIN(m_MT, MT_TASK_NONE, MT_TASK_NONE);
-        while (m_busy || !BufferDataEmpty())
+        while (m_Busy || !BufferDataEmpty())
         {
-            // printf("%s waiting...(not empty)\n", m_name.c_str());
-            m_CDT.wait(rl);
+            m_Condition.wait(rl);
         }
         MT_READ_LOCK_END(m_MT, MT_TASK_NONE, MT_TASK_NONE);
     }
 
 protected:
-    boost::condition m_CDT;
-    boost::shared_mutex m_MT;
+    std::condition_variable m_Condition;
+    std::mutex m_MT;
 
-    int m_busy, m_stop;
+    int m_Busy;
+    int m_Stop;
 
-    int m_serial, m_serialCnt;
-    int m_iCore;
+    int m_Serial;
+    int m_SerialCount;
+    int m_ICore;
+
     std::string m_name;
-#ifndef WIN32
     std::thread m_thread;
-#endif
 };
 
 } // namespace MT

@@ -2496,13 +2496,11 @@ void Internal::AssertConsistency()
     UT_ASSERT(static_cast<int>(m_ds.size()) == Nd);
     UT_ASSERT(static_cast<int>(m_uds.size()) == Nd);
 #ifdef CFG_SERIAL
-    if (m_LBA.m_serial && m_GBA.m_serial)
+    if (m_LBA.m_Serial && m_GBA.m_Serial)
     {
         UT_ASSERT(m_LBA.m_CsKF.Size() == nKFs && m_GBA.m_Cs.Size() == nKFs);
         for (int iKF = 0; iKF < nKFs; ++iKF)
         {
-            // m_LBA.m_CsKF[iKF].AssertEqual(m_GBA.m_Cs[iKF], 0, "", -1.0f,
-            // -1.0f);
             UT_ASSERT(m_LBA.m_CsKF[iKF] == m_GBA.m_Cs[iKF]);
 #ifdef CFG_HANDLE_SCALE_JUMP
             UT_ASSERT(m_LBA.m_dsKF[iKF] == m_GBA.m_dsKF[iKF]);

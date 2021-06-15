@@ -1,12 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o"
-  "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o"
-  "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o"
   "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o"
   "CMakeFiles/IBA.dir/Geometry/Camera.cpp.o"

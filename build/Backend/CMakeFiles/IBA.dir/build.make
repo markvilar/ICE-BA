@@ -109,22 +109,9 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.s: cmake_fo
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.s"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustor.cpp -o CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.s
 
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o: ../Backend/BundleAdjustment/GlobalBundleAdjustorDebug.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o"
-	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorDebug.cpp
-
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i"
-	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorDebug.cpp > CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i
-
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s"
-	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorDebug.cpp -o CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s
-
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o: ../Backend/BundleAdjustment/GlobalBundleAdjustorDL.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorDL.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.i: cmake_force
@@ -137,7 +124,7 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.s: cmake_
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o: ../Backend/BundleAdjustment/GlobalBundleAdjustorGN.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorGN.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.i: cmake_force
@@ -150,7 +137,7 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.s: cmake_
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o: ../Backend/BundleAdjustment/GlobalBundleAdjustorIO.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/GlobalBundleAdjustorIO.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.i: cmake_force
@@ -163,7 +150,7 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.s: cmake_
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o: ../Backend/BundleAdjustment/LocalBundleAdjustor.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustor.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.i: cmake_force
@@ -174,22 +161,9 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.s: cmake_for
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.s"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustor.cpp -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.s
 
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o: ../Backend/BundleAdjustment/LocalBundleAdjustorDebug.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o"
-	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorDebug.cpp
-
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.i"
-	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorDebug.cpp > CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.i
-
-Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.s"
-	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorDebug.cpp -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.s
-
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o: ../Backend/BundleAdjustment/LocalBundleAdjustorDL.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorDL.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.i: cmake_force
@@ -202,7 +176,7 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.s: cmake_f
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o: ../Backend/BundleAdjustment/LocalBundleAdjustorGN.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorGN.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.i: cmake_force
@@ -215,7 +189,7 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.s: cmake_f
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o: ../Backend/BundleAdjustment/LocalBundleAdjustorIO.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o -c /home/martin/Develop/ICE-BA/Backend/BundleAdjustment/LocalBundleAdjustorIO.cpp
 
 Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.i: cmake_force
@@ -228,7 +202,7 @@ Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.s: cmake_f
 
 Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.o: ../Backend/Geometry/Camera.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Geometry/Camera.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Geometry/Camera.cpp
 
 Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.i: cmake_force
@@ -241,7 +215,7 @@ Backend/CMakeFiles/IBA.dir/Geometry/Camera.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.o: ../Backend/Geometry/CameraPrior.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Geometry/CameraPrior.cpp
 
 Backend/CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.i: cmake_force
@@ -254,7 +228,7 @@ Backend/CMakeFiles/IBA.dir/Geometry/CameraPrior.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Geometry/Depth.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Geometry/Depth.cpp.o: ../Backend/Geometry/Depth.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/Depth.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/Depth.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Geometry/Depth.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Geometry/Depth.cpp
 
 Backend/CMakeFiles/IBA.dir/Geometry/Depth.cpp.i: cmake_force
@@ -267,7 +241,7 @@ Backend/CMakeFiles/IBA.dir/Geometry/Depth.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Geometry/IMU.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Geometry/IMU.cpp.o: ../Backend/Geometry/IMU.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/IMU.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/IMU.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Geometry/IMU.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Geometry/IMU.cpp
 
 Backend/CMakeFiles/IBA.dir/Geometry/IMU.cpp.i: cmake_force
@@ -280,7 +254,7 @@ Backend/CMakeFiles/IBA.dir/Geometry/IMU.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.o: ../Backend/Geometry/Intrinsic.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object Backend/CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Geometry/Intrinsic.cpp
 
 Backend/CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.i: cmake_force
@@ -293,7 +267,7 @@ Backend/CMakeFiles/IBA.dir/Geometry/Intrinsic.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Map/Feature.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Map/Feature.cpp.o: ../Backend/Map/Feature.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object Backend/CMakeFiles/IBA.dir/Map/Feature.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object Backend/CMakeFiles/IBA.dir/Map/Feature.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Map/Feature.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Map/Feature.cpp
 
 Backend/CMakeFiles/IBA.dir/Map/Feature.cpp.i: cmake_force
@@ -306,7 +280,7 @@ Backend/CMakeFiles/IBA.dir/Map/Feature.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Map/GlobalMap.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Map/GlobalMap.cpp.o: ../Backend/Map/GlobalMap.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object Backend/CMakeFiles/IBA.dir/Map/GlobalMap.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object Backend/CMakeFiles/IBA.dir/Map/GlobalMap.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Map/GlobalMap.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Map/GlobalMap.cpp
 
 Backend/CMakeFiles/IBA.dir/Map/GlobalMap.cpp.i: cmake_force
@@ -319,7 +293,7 @@ Backend/CMakeFiles/IBA.dir/Map/GlobalMap.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Map/LocalMap.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Map/LocalMap.cpp.o: ../Backend/Map/LocalMap.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object Backend/CMakeFiles/IBA.dir/Map/LocalMap.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object Backend/CMakeFiles/IBA.dir/Map/LocalMap.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Map/LocalMap.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Map/LocalMap.cpp
 
 Backend/CMakeFiles/IBA.dir/Map/LocalMap.cpp.i: cmake_force
@@ -332,7 +306,7 @@ Backend/CMakeFiles/IBA.dir/Map/LocalMap.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Utility/Utility.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Utility/Utility.cpp.o: ../Backend/Utility/Utility.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object Backend/CMakeFiles/IBA.dir/Utility/Utility.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object Backend/CMakeFiles/IBA.dir/Utility/Utility.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Utility/Utility.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Utility/Utility.cpp
 
 Backend/CMakeFiles/IBA.dir/Utility/Utility.cpp.i: cmake_force
@@ -345,7 +319,7 @@ Backend/CMakeFiles/IBA.dir/Utility/Utility.cpp.s: cmake_force
 
 Backend/CMakeFiles/IBA.dir/Utility/MultiThread.cpp.o: Backend/CMakeFiles/IBA.dir/flags.make
 Backend/CMakeFiles/IBA.dir/Utility/MultiThread.cpp.o: ../Backend/Utility/MultiThread.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object Backend/CMakeFiles/IBA.dir/Utility/MultiThread.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object Backend/CMakeFiles/IBA.dir/Utility/MultiThread.cpp.o"
 	cd /home/martin/Develop/ICE-BA/build/Backend && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/IBA.dir/Utility/MultiThread.cpp.o -c /home/martin/Develop/ICE-BA/Backend/Utility/MultiThread.cpp
 
 Backend/CMakeFiles/IBA.dir/Utility/MultiThread.cpp.i: cmake_force
@@ -362,12 +336,10 @@ IBA_OBJECTS = \
 "CMakeFiles/IBA.dir/IBA/Parameter.cpp.o" \
 "CMakeFiles/IBA.dir/IBA/stdafx.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.o" \
-"CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o" \
-"CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o" \
 "CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o" \
@@ -389,12 +361,10 @@ Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/IBA/IBA.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/IBA/Parameter.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/IBA/stdafx.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustor.cpp.o
-Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorGN.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorIO.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustor.cpp.o
-Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorGN.cpp.o
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorIO.cpp.o
@@ -414,7 +384,7 @@ Backend/libIBA.so: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
 Backend/libIBA.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
 Backend/libIBA.so: /usr/lib/x86_64-linux-gnu/libboost_atomic.so.1.71.0
 Backend/libIBA.so: Backend/CMakeFiles/IBA.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Linking CXX shared library libIBA.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/martin/Develop/ICE-BA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Linking CXX shared library libIBA.so"
 	cd /home/martin/Develop/ICE-BA/build/Backend && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/IBA.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

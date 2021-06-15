@@ -335,6 +335,7 @@ public:
             }
             KeyFrameBA::DeleteKeyFrame(iKF, &_iZ, &ik);
         }
+        
         inline void DeleteFeatureMeasurements(const std::vector<int>& izs)
         {
             const int Nz1 = static_cast<int>(m_zs.size());
@@ -359,6 +360,7 @@ public:
             m_Mzs1.Resize(Nz2);
             m_Mzs2.Resize(Nz2);
         }
+        
         inline void InvalidateFeatures(const ubyte* mxs)
         {
             KeyFrameBA::InvalidateFeatures(mxs);
@@ -374,6 +376,7 @@ public:
                 m_Mxs2[ix].MakeZero();
             }
         }
+        
         inline void MakeZero()
         {
             KeyFrameBA::MakeZero();
@@ -397,6 +400,7 @@ public:
             }
 #endif
         }
+
         inline void InsertMatchKeyFrame(
             const int iKF, const std::vector<int>::iterator* ik = NULL)
         {
@@ -428,6 +432,7 @@ public:
                 }
             }
         }
+        
         inline int PushCameraPrior(const int iKF, AlignedVector<float>* work)
         {
             const std::vector<int>::iterator ip =
@@ -460,6 +465,7 @@ public:
             }
             return _ip;
         }
+        
         inline int SearchPriorKeyFrame(const int iKF) const
         {
             const std::vector<int>::const_iterator ip =
@@ -468,6 +474,7 @@ public:
                        ? -1
                        : int(ip - m_iKFsPrior.begin());
         }
+        
         inline void SaveB(FILE* fp) const
         {
             KeyFrameBA::SaveB(fp);
@@ -487,6 +494,7 @@ public:
             UT::VectorSaveB(m_ikp2KF, fp);
             m_SAps.SaveB(fp);
         }
+        
         inline void LoadB(FILE* fp)
         {
             KeyFrameBA::LoadB(fp);
@@ -506,6 +514,7 @@ public:
             UT::VectorLoadB(m_ikp2KF, fp);
             m_SAps.LoadB(fp);
         }
+        
         inline void AssertConsistency(const int iKF) const
         {
             KeyFrameBA::AssertConsistency(iKF);
@@ -523,15 +532,12 @@ public:
             }
 #endif
             UT_ASSERT(m_SAcxzs.Size() == static_cast<int>(m_Zs.size()));
-            // UT_ASSERT(m_iKFsMatch.empty() || m_iKFsMatch.back() < iKF);
-            // UT_ASSERT(m_iKFsPrior.empty() || m_iKFsPrior.back() < iKF);
             const int Nk = static_cast<int>(
                 std::lower_bound(m_iKFsMatch.begin(), m_iKFsMatch.end(), iKF) -
                 m_iKFsMatch.begin());
             const int Np = static_cast<int>(
                 std::lower_bound(m_iKFsPrior.begin(), m_iKFsPrior.end(), iKF) -
                 m_iKFsPrior.begin());
-            // m_Zm.AssertConsistency(static_cast<int>(m_iKFsMatch.size()));
             m_Zm.AssertConsistency(Nk);
             UT_ASSERT(static_cast<int>(m_iAp2kp.size()) == Np);
             UT_ASSERT(m_SAps.Size() == Np);
@@ -585,11 +591,13 @@ public:
             m_iKF = iKF;
             *((CameraPrior::Motion*)this) = Zp;
         }
+        
         inline void operator=(const CameraPriorMotion& Zp)
         {
             m_iKF = Zp.m_iKF;
             *((CameraPrior::Motion*)this) = Zp;
         }
+        
         inline bool DeleteKeyFrame(const int iKF)
         {
             if (m_iKF == iKF)
@@ -603,14 +611,17 @@ public:
             }
             return false;
         }
+        
         inline bool Valid() const { return m_iKF != -1; }
         inline bool Invalid() const { return m_iKF == -1; }
         inline void Invalidate() { m_iKF = -1; }
+        
         inline void SaveB(FILE* fp) const
         {
             CameraPrior::Motion::SaveB(fp);
             UT::SaveB(m_iKF, fp);
         }
+        
         inline void LoadB(FILE* fp)
         {
             CameraPrior::Motion::LoadB(fp);
@@ -632,6 +643,7 @@ public:
         TM_UPDATE,
         TM_TYPES
     };
+    
     class ES
     {
     public:
@@ -641,6 +653,7 @@ public:
                    m_ESd.Total() + m_ESo.Total() + m_ESfp.Total() +
                    m_ESfm.Total();
         }
+        
         inline void Save(FILE* fp) const
         {
             fprintf(fp,
@@ -662,6 +675,7 @@ public:
         Camera::Fix::PositionZ::ES m_ESfp;
         Camera::Fix::Motion::ES m_ESfm;
     };
+    
     class Residual
     {
     public:
@@ -670,27 +684,24 @@ public:
     public:
         float m_r2, m_F;
     };
+    
     class History
     {
     public:
         inline void MakeZero() { memset(this, 0, sizeof(History)); }
 
     public:
-        // m_history >= 1
         double m_ts[TM_TYPES];
-        // int m_Nd;
-        // m_history >= 2
         ES m_ESa, m_ESb, m_ESp;
 #ifdef CFG_GROUND_TRUTH
-        // m_history >= 3 using only available depth measurements
         ES m_ESaGT, m_ESpGT;
 #endif
-        // m_history >= 2
         Residual m_R;
 #ifdef CFG_GROUND_TRUTH
         Residual m_RGT;
 #endif
     };
+    
     class HistoryCamera
     {
     public:
@@ -699,6 +710,7 @@ public:
             : m_iFrm(T.m_iFrm), m_t(T.m_t), m_C(C)
         {
         }
+        
         inline bool operator<(const HistoryCamera& C) const
         {
             return m_iFrm < C.m_iFrm;
@@ -875,7 +887,10 @@ protected:
     IBA::Solver* m_solver;
     LocalMap* m_LM;
     GlobalMap* m_GM;
-    class LocalBundleAdjustor* m_LBA;
+    LocalBundleAdjustor* m_LBA;
+
+    // TODO: Investigate why LocalBundleAdjustor is declared here.
+    // class LocalBundleAdjustor* m_LBA;
     Camera::Calibration m_K;
     int m_verbose, m_debug, m_history;
     const Camera* m_CsGT;
@@ -890,6 +905,7 @@ protected:
         IT_CAMERA_PRIOR_POSE,
         IT_CAMERA_PRIOR_MOTION
     };
+
     std::list<InputType> m_ITs1, m_ITs2;
     std::list<InputKeyFrame> m_IKFs1, m_IKFs2;
     std::list<int> m_IDKFs1, m_IDKFs2;
@@ -960,7 +976,6 @@ protected:
     std::vector<int> m_iKF2cb;
     AlignedVector<LA::AlignedMatrix6x6f> m_Acus, m_Acbs, m_AcbTs;
     AlignedVector<LA::AlignedMatrix9x9f> m_AmusLM;
-    // LA::AlignedVectorXf m_ss;
     AlignedVector<Camera::Conditioner::C> m_Mcs;
     AlignedVector<Camera::Conditioner::M> m_MmsLM;
     AlignedMatrixX<LA::AlignedMatrix6x6f> m_Mcc, m_MccT;
@@ -1027,6 +1042,7 @@ protected:
                 : m_iKF(iKF), m_iz(iz)
             {
             }
+            
             inline bool operator<(const Measurement& z) const
             {
                 return m_iKF < z.m_iKF;
@@ -1044,31 +1060,6 @@ protected:
         std::vector<Measurement> m_zs;
         FTR::EigenFactor::DDC m_Sadx;
     };
-
-protected:
-    virtual void DebugGenerateTracks();
-    virtual void DebugUpdateFactors();
-    virtual void DebugUpdateFactorsFeature();
-    virtual void DebugUpdateFactorsPriorCameraPose();
-    virtual void DebugUpdateFactorsPriorCameraMotion();
-    virtual void DebugUpdateFactorsPriorDepth();
-    virtual void DebugUpdateFactorsIMU();
-    virtual void DebugUpdateFactorsFixOrigin();
-    virtual void DebugUpdateFactorsFixPositionZ();
-    virtual void DebugUpdateFactorsFixMotion();
-    virtual void DebugUpdateSchurComplement();
-    virtual void DebugSolveSchurComplement();
-    virtual void DebugSolveBackSubstitution();
-    virtual void DebugSolveGradientDescent();
-    virtual void DebugComputeReduction();
-    virtual void DebugComputeReductionFeature();
-    virtual void DebugComputeReductionPriorCameraPose();
-    virtual void DebugComputeReductionPriorCameraMotion();
-    virtual void DebugComputeReductionPriorDepth();
-    virtual void DebugComputeReductionIMU();
-    virtual void DebugComputeReductionFixOrigin();
-    virtual void DebugComputeReductionFixPositionZ();
-    virtual void DebugComputeReductionFixMotion();
 
 protected:
     std::vector<std::vector<Track>> e_Xs;

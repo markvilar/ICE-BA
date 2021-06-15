@@ -313,5 +313,5 @@ public:
 protected:
     std::vector<Camera> m_Cs;
     ubyte m_Uc;
-    boost::shared_mutex m_MT;
+    std::mutex m_MT;
 };

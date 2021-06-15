@@ -3,3 +3,6 @@
 /home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/rebuild_cache.dir
 /home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/edit_cache.dir
 /home/martin/Develop/ICE-BA/build/Backend/CMakeFiles/IBA.dir
+/home/martin/Develop/ICE-BA/build/App/CMakeFiles/rebuild_cache.dir
+/home/martin/Develop/ICE-BA/build/App/CMakeFiles/edit_cache.dir
+/home/martin/Develop/ICE-BA/build/App/CMakeFiles/Backend.dir

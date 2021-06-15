@@ -14,14 +14,7 @@
  * limitations under the License.
  *****************************************************************************/
 #include "stdafx.h"
-//#ifndef CFG_DEBUG
-//#define CFG_DEBUG
-//#endif
 #include "GlobalBundleAdjustor.h"
-
-#ifdef CFG_DEBUG
-//#define GBA_DEBUG_ACTUAL_COST
-#endif
 
 void GlobalBundleAdjustor::SaveB(FILE* fp)
 {
@@ -46,7 +39,6 @@ void GlobalBundleAdjustor::SaveB(FILE* fp)
     UT::VectorSaveB(m_hists, fp);
 #endif
     UT::VectorSaveB(m_CsDel, fp);
-    // UT::SaveB(m_delta2, fp);
     UT::SaveB(m_Zo, fp);
     UT::SaveB(m_Ao, fp);
     FRM::VectorSaveB(m_Zps, fp);
@@ -83,7 +75,6 @@ void GlobalBundleAdjustor::SaveB(FILE* fp)
     m_SAcus.SaveB(fp);
     m_SMcus.SaveB(fp);
     m_SAcmsLM.SaveB(fp);
-    // UT::SaveB(m_F, fp);
     UT::VectorSaveB(m_iKF2cb, fp);
 }
 
@@ -110,7 +101,6 @@ void GlobalBundleAdjustor::LoadB(FILE* fp)
     UT::VectorLoadB(m_hists, fp);
 #endif
     UT::VectorLoadB(m_CsDel, fp);
-    // UT::LoadB(m_delta2, fp);
     UT::LoadB(m_Zo, fp);
     UT::LoadB(m_Ao, fp);
     FRM::VectorLoadB(m_Zps, fp);
@@ -187,7 +177,6 @@ void GlobalBundleAdjustor::LoadB(FILE* fp)
     m_SAcus.LoadB(fp);
     m_SMcus.LoadB(fp);
     m_SAcmsLM.LoadB(fp);
-    // UT::LoadB(m_F, fp);
     UT::VectorLoadB(m_iKF2cb, fp);
 }
 
@@ -297,18 +286,6 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
                                     ME::Weight<GBA_ME_FUNCTION>(r2) * r2;
                     const bool r = r2 < r2Max;
                     ES.Accumulate(m_K.m_K, e.m_e, F, idx, r);
-//#ifdef CFG_DEBUG
-#if 0
-          //if (iKF == 12 && iz == 368) {
-          //  Tr[0].Print(true);
-          //  _KF.m_xs[ix].m_x.Print(true);
-          //  _ds[ix].Print(true);
-          //  z.m_z.Print(true);
-          //  z.m_W.Print(true);
-          //  UT::Print("%e %e\n", r2, F);
-          //}
-          UT::Print("%d %d %e %e\n", iKF, iz, F, ES.Total());
-#endif
                 }
                 if (z.m_zr.Valid())
                 {
@@ -319,16 +296,10 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
                                     ME::Weight<GBA_ME_FUNCTION>(r2) * r2;
                     const bool r = r2 < r2Max;
                     ES.Accumulate(m_K.m_Kr, e.m_er, F, idx, r);
-//#ifdef CFG_DEBUG
-#if 0
-          UT::Print("%d %d %e %e\n", iKF, iz, F, ES.Total());
-#endif
                 }
 #else
                 const float r2 =
                     LA::SymmetricMatrix2x2f::MahalanobisDistance(z.m_W, e.m_e);
-                // const float F = BA_WEIGHT_FEATURE *
-                // ME::Cost<GBA_ME_FUNCTION>(r2);
                 const float F =
                     BA_WEIGHT_FEATURE * ME::Weight<GBA_ME_FUNCTION>(r2) * r2;
                 const bool r = r2 < r2Max;
@@ -364,8 +335,6 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
             {
                 const float ed = _ds[ix].u() - zp.m_d;
                 const float r2d = zp.m_w * ed * ed;
-                // const float Fd = BA_WEIGHT_PRIOR_DEPTH *
-                // ME::Cost<GBA_ME_FUNCTION>(r2d);
                 const float Fd = BA_WEIGHT_PRIOR_DEPTH *
                                  ME::Weight<GBA_ME_FUNCTION>(r2d) * r2d;
                 const FTR::ESIndex idx(KF.m_T.m_iFrm, ix);
@@ -384,31 +353,16 @@ GlobalBundleAdjustor::ComputeErrorStatisticPriorCameraPose(
     CameraPrior::Pose::ES ES;
     ES.Initialize();
 
-//#ifdef CFG_DEBUG
-#if 0
-  UT::PrintSeparator();
-#endif
     CameraPrior::Pose::Error e;
     const int NZ = static_cast<int>(m_Zps.size());
     for (int iZ = 0; iZ < NZ; ++iZ)
     {
         const CameraPrior::Pose& Z = m_Zps[iZ];
         Z.GetError(Cs, &e, BA_ANGLE_EPSILON);
-        // const float F = Z.GetCost(BA_WEIGHT_PRIOR_CAMERA_POSE, e);
-        // const float F = Z.GetCost(BA_WEIGHT_PRIOR_CAMERA_POSE, e) -
-        //                          BA_WEIGHT_PRIOR_CAMERA_POSE * Z.m_xTb;
         const float w = m_Aps[iZ].m_w;
         const float F = Z.GetCost(w, e) - w * Z.m_xTb;
         ES.Accumulate(e, F, m_iFrms[Z.m_iKFr]);
-//#ifdef CFG_DEBUG
-#if 0
-    UT::Print("%d %f\t", iZ, w / BA_WEIGHT_PRIOR_CAMERA_POSE);
-#endif
     }
-//#ifdef CFG_DEBUG
-#if 0
-  UT::Print("\n");
-#endif
     return ES;
 }
 
@@ -475,16 +429,6 @@ Camera::Fix::Origin::ES GlobalBundleAdjustor::ComputeErrorStatisticFixOrigin(
         m_Zo.GetError(Cs[iKF], e, BA_ANGLE_EPSILON);
         const float F = m_Zo.GetCost(e);
         ES.Accumulate(e, F, iFrm);
-//#ifdef CFG_DEBUG
-#if 0
-    if (m_Cs.Size() == 2) {
-      const LA::AlignedVector3f g = Cs[iKF].GetColumn2();
-      const LA::AlignedVector3f gGT = m_CsKFGT[iKF].GetColumn2();
-      const float d = g.Dot(gGT);
-      const float a = UT_DOT_TO_ANGLE(d) * UT_FACTOR_RAD_TO_DEG;
-      UT::Print("%f\n", a);
-    }
-#endif
     }
     return ES;
 }
@@ -582,7 +526,6 @@ GlobalBundleAdjustor::ES GlobalBundleAdjustor::ComputeErrorStatistic(
     AlignedVector<Depth::InverseGaussian> _ds;
     LA::AlignedVectorXf _xds;
     ConvertCameraUpdates(xcs, &m_xcsP);
-    // if (static_cast<int>(ds.size()) < Nd) {
     if (xs.Size() < Nc * pc + Nm * pm + Nd)
     {
         m_work.Resize(_ds.BindSize(Nd) + _xds.BindSize(Nd));
@@ -645,10 +588,6 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
 #endif
     FTR::Error ex;
     float Fx;
-#if 0
-//#if 1
-  float FMax = 0.0f, eMax = 0.0f;
-#endif
 #ifdef GBA_DEBUG_ACTUAL_COST
     const float r2Max = ME::Variance<GBA_ME_FUNCTION>();
 #endif
@@ -718,49 +657,6 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
 #endif
                 }
                 const FTR::ESIndex idx(_KF.m_T.m_iFrm, ix, KF.m_T.m_iFrm, iz);
-#if 0
-//#if 1
-        if (iKF == 1 && iz == 41) {
-          FTR::ErrorJacobian::DCXZ Je;
-          Je = L.m_Je;
-          const Rigid3D Tr = m_CsBkp[iKF] / m_CsBkp[_iKF];
-          FTR::GetErrorJacobian(Tr, _KF.m_xs[ix], m_dsBkp[id + ix], m_CsBkp[iKF], z.m_z, Je);
-          UT::PrintSeparator();
-          UT::Print("%f\n", sqrtf(Je.m_e.SquaredLength() * m_K.m_K.fxy()));
-          FTR::GetError(Je, _xc, NULL, NULL, ex.m_e);
-          UT::Print("%f\n", sqrtf(ex.m_e.SquaredLength() * m_K.m_K.fxy()));
-          FTR::GetError(Je, NULL, xc, NULL, ex.m_e);
-          UT::Print("%f\n", sqrtf(ex.m_e.SquaredLength() * m_K.m_K.fxy()));
-          FTR::GetError(Je, NULL, NULL, xd, ex.m_e);
-          UT::Print("%f\n", sqrtf(ex.m_e.SquaredLength() * m_K.m_K.fxy()));
-          FTR::GetError(Je, _xc, xc, xd, ex.m_e);
-          UT::Print("%f\n", sqrtf(ex.m_e.SquaredLength() * m_K.m_K.fxy()));
-        }
-#endif
-#if 0
-//#if 1
-        if (UT::Debugging()) {
-          UT::Print("%e + %e = %e\n", Fx, ES.m_ESx.m_SF, F + ES.m_ESx.m_SF);
-          if (F > FMax) {
-            FMax = F;
-            UT::Print("iKF %d ix %d --> iKF %d iz %d %e\n", _iKF, ix, iKF, iz, F);
-          }
-          if (z.m_z.Valid()) {
-            const float e = sqrtf(ex.m_e.SquaredLength() * m_K.m_K.fxy());
-            if (_e > eMax) {
-              eMax = _e;
-              UT::Print("iKF %d ix %d --> iKF %d iz %d %f\n", _iKF, ix, iKF, iz, e);
-            }
-          }
-          if (z.m_zr.Valid()) {
-            const float e = sqrtf(ex.m_er.SquaredLength() * m_K.m_Kr.fxy());
-            if (e > eMax) {
-              eMax = e;
-              UT::Print("iKF %d ix %d --> iKF %d iz %d %f\n", _iKF, ix, iKF, iz, e);
-            }
-          }
-        }
-#endif
 #ifdef CFG_STEREO
                 if (z.m_z.Valid())
                 {
@@ -804,8 +700,6 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
 #else
                 const float r2 =
                     LA::SymmetricMatrix2x2f::MahalanobisDistance(z.m_W, e.m_e);
-                // const float F = BA_WEIGHT_FEATURE *
-                // ME::Cost<GBA_ME_FUNCTION>(r2);
                 const float F =
                     BA_WEIGHT_FEATURE * ME::Weight<GBA_ME_FUNCTION>(r2) * r2;
                 const bool r = r2 < r2Max;
@@ -855,21 +749,6 @@ FTR::ES GlobalBundleAdjustor::ComputeErrorStatisticFeaturePriorDepth(
                 }
                 const FTR::ESIndex idx(KF.m_T.m_iFrm, ix);
                 ES.Accumulate(m_K.m_Kr, er, Fp, idx);
-#if 0
-//#if 1
-        if (UT::Debugging()) {
-          UT::Print("%e + %e = %e\n", Fp, ES.m_ESx.m_SF, Fp + ES.m_ESx.m_SF);
-          if (Fp > FMax) {
-            FMax = Fp;
-            UT::Print("iKF %d ix %d %e\n", iKF, ix, Fx);
-          }
-          const float e = sqrtf(er.SquaredLength() * m_K.m_Kr.fxy());
-          if (e > eMax) {
-            eMax = e;
-            UT::Print("iKF %d ix %d %f\n", iKF, ix, e);
-          }
-        }
-#endif
 #ifdef GBA_DEBUG_ACTUAL_COST
                 FTR::GetError(m_K.m_br, d, x, er);
                 const float rx2 =
@@ -953,8 +832,6 @@ GlobalBundleAdjustor::ComputeErrorStatisticPriorCameraPose(
     for (int iZ = 0; iZ < NZ; ++iZ)
     {
         const CameraPrior::Pose& Z = m_Zps[iZ];
-        // const float F = Z.GetCost(BA_WEIGHT_PRIOR_CAMERA_POSE,
-        // m_Aps[iZ].m_Je, m_xpsP, m_xrsP, &e);
         const float F = Z.GetCost(BA_WEIGHT_PRIOR_CAMERA_POSE,
                             m_Aps[iZ].m_Je,
                             m_xpsP,
@@ -1042,10 +919,6 @@ IMU::Delta::ES GlobalBundleAdjustor::ComputeErrorStatisticIMU(
 #ifdef GBA_DEBUG_ACTUAL_COST
     IMU::Delta::ES _ES;
     _ES.Initialize();
-#endif
-//#ifdef CFG_DEBUG
-#if 0
-  float dF = 0.0f;
 #endif
     IMU::Delta::Error e;
     float F;
@@ -1152,10 +1025,6 @@ IMU::Delta::ES GlobalBundleAdjustor::ComputeErrorStatisticIMU(
             UT::DebugStop();
         }
         _ES.Accumulate(e, F, KF.m_T.m_iFrm);
-#endif
-//#ifdef CFG_DEBUG
-#if 0
-    dF = A.m_F - F + dF;
 #endif
     }
 #ifdef GBA_DEBUG_ACTUAL_COST
@@ -1316,18 +1185,12 @@ void GlobalBundleAdjustor::AssertConsistency(
     {
         UT_ASSERT(m_CsKFGT.Empty() && m_CsLMGT.Empty() && m_DsLMGT.Empty());
     }
-    // if (m_dsGT) {
-    //  UT_ASSERT(m_dsGT->size() == Nd);
-    //}
 #endif
 
     const int NZp = static_cast<int>(m_Zps.size());
     for (int iZp = 0; iZp < NZp; ++iZp)
     {
         const CameraPrior::Pose& Zp = m_Zps[iZp];
-        // if (iZp > 0) {
-        //  UT_ASSERT(Zp.m_iKFr > m_Zps[iZp - 1].m_iKFr);
-        //}
         Zp.AssertConsistency();
         m_Aps[iZp].AssertConsistency();
     }
@@ -1437,7 +1300,6 @@ void GlobalBundleAdjustor::AssertConsistency(
             if (!KF.m_us.Empty())
             {
                 UT_ASSERT(KF.m_us.Front().t() >= _T.m_t);
-                // UT_ASSERT(KF.m_iKFsMatch.back() == _iKF);
                 UT_ASSERT(KF.m_iKFsMatch[KF.m_Zm.m_SMczms.Size() - 1] == _iKF);
             }
         }
@@ -1519,9 +1381,8 @@ void GlobalBundleAdjustor::AssertConsistency(
         const ubyte* uds = m_uds.data() + m_iKF2d[iKF];
         const KeyFrame& KF = m_KFs[iKF];
         const int Nx = static_cast<int>(KF.m_xs.size());
-        UT_ASSERT(/*!(uc & GBA_FLAG_FRAME_UPDATE_TRACK_INFORMATION) &&*/
-            !(uc & GBA_FLAG_FRAME_UPDATE_SCHUR_COMPLEMENT) &&
-            !(uc & GBA_FLAG_FRAME_UPDATE_BACK_SUBSTITUTION));
+        UT_ASSERT(!(uc & GBA_FLAG_FRAME_UPDATE_SCHUR_COMPLEMENT) &&
+                  !(uc & GBA_FLAG_FRAME_UPDATE_BACK_SUBSTITUTION));
         UT_ASSERT(
             ((uc & GBA_FLAG_FRAME_UPDATE_DEPTH) != 0) ==
             UT::VectorExistFlag<ubyte>(uds, Nx, GBA_FLAG_TRACK_UPDATE_DEPTH));
@@ -1564,14 +1425,6 @@ void GlobalBundleAdjustor::AssertConsistency(
             }
         }
     }
-
-    ////const float s2dMax = BA_VARIANCE_MAX_DEPTH == 0.0f ? FLT_MAX :
-    // const float s2dMax = BA_VARIANCE_MAX_DEPTH == 0.0f ? 0.0f :
-    //                     BA_VARIANCE_MAX_DEPTH + DEPTH_VARIANCE_EPSILON +
-    //                     FLT_EPSILON;
-    // for (int id = 0; id < Nd; ++id) {
-    //  UT_ASSERT(m_ds[id].s2() <= s2dMax);
-    //}
 
     const float add =
         UT::Inverse(BA_VARIANCE_REGULARIZATION_DEPTH, BA_WEIGHT_FEATURE);
@@ -1641,10 +1494,6 @@ void GlobalBundleAdjustor::AssertConsistency(
     SMcus.MakeZero();
     SAcmsLM.Bind(SMcus.BindNext(), nKFs);
     SAcmsLM.MakeZero();
-//#ifdef CFG_DEBUG
-#if 0
-  UT::PrintSeparator('*');
-#endif
     for (int iKF = 0; iKF < nKFs; ++iKF)
     {
         Camera::Factor::Unitary::CC &SAczz = SAcus[iKF], &SMczz = SMcus[iKF];
@@ -1656,20 +1505,6 @@ void GlobalBundleAdjustor::AssertConsistency(
             const int _iKF = Z.m_iKF;
             const ubyte* _uds = m_uds.data() + m_iKF2d[_iKF];
             Camera::Factor::Unitary::CC& SAcxx = SAcus[_iKF];
-//#ifdef CFG_DEBUG
-#if 0
-      Camera::Factor::Unitary::CC AcxxChk;
-      AcxxChk.MakeZero();
-      for (int iz = Z.m_iz1; iz < Z.m_iz2; ++iz) {
-        AcxxChk += KF.m_Azs2[iz].m_Acxx;
-      }
-      if (m_iFrms[_iKF] == 24) {
-        UT::PrintSeparator();
-        UT::Print("Visual %d [%d]\n", iKF, KF.m_T.m_iFrm);
-        UT::Print("%f + %f = %f\n", AcxxChk.m_A.m00(), SAcxx.m_A.m00(),
-                                    AcxxChk.m_A.m00() + SAcxx.m_A.m00());
-      }
-#endif
             for (int iz = Z.m_iz1; iz < Z.m_iz2; ++iz)
             {
                 const FTR::Factor::Full::A2& Az = KF.m_Azs2[iz];
@@ -1680,12 +1515,6 @@ void GlobalBundleAdjustor::AssertConsistency(
                 {
                     SMczz += KF.m_Mzs2[iz].m_Mczz;
                 }
-//#ifdef CFG_DEBUG
-#if 0
-        if (iKF == 87) {
-          UT::Print("%d %f\n", iz, SAczz.m_A.m00());
-        }
-#endif
             }
         }
         Camera::Factor::Unitary::CC& SMcxx = SMcus[iKF];
@@ -1710,15 +1539,6 @@ void GlobalBundleAdjustor::AssertConsistency(
         {
             const int iKF = i == -1 ? Zp.m_iKFr : Zp.m_iKFs[i];
             Acu.Set(Ap.m_A[_i][_i], Ap.m_b[_i]);
-//#ifdef CFG_DEBUG
-#if 0
-      if (m_iFrms[iKF] == 24) {
-        UT::PrintSeparator();
-        UT::Print("Prior %d\n", iZp);
-        UT::Print("%f + %f = %f\n", Acu.m_A.m00(), SAcus[iKF].m_A.m00(),
-                                    Acu.m_A.m00() + SAcus[iKF].m_A.m00());
-      }
-#endif
             SAcus[iKF] += Acu;
         }
     }
@@ -1735,21 +1555,6 @@ void GlobalBundleAdjustor::AssertConsistency(
          ic1 = ic2++, im1 = im2++)
     {
         const IMU::Delta::Factor& Ad = m_AdsLM[im2];
-//#ifdef CFG_DEBUG
-#if 0
-    if (m_iFrms[ic1] == 24) {
-      UT::PrintSeparator();
-      UT::Print("IMU (%d, %d)\n", ic1, ic2);
-      UT::Print("%f + %f = %f\n", Ad.m_A11.m_Acc.m_A.m00(), SAcus[ic1].m_A.m00(),
-                                  Ad.m_A11.m_Acc.m_A.m00() + SAcus[ic1].m_A.m00());
-    }
-    if (m_iFrms[ic2] == 24) {
-      UT::PrintSeparator();
-      UT::Print("IMU (%d, %d)\n", ic1, ic2);
-      UT::Print("%f + %f = %f\n", Ad.m_A22.m_Acc.m_A.m00(), SAcus[ic2].m_A.m00(),
-                                  Ad.m_A22.m_Acc.m_A.m00() + SAcus[ic2].m_A.m00());
-    }
-#endif
         Camera::Factor::Unitary& SAcm1 = SAcmsLM[im1].m_Au;
         Camera::Factor::Unitary& SAcm2 = SAcmsLM[im2].m_Au;
         SAcus[ic1] += Ad.m_A11.m_Acc;
@@ -1793,13 +1598,6 @@ void GlobalBundleAdjustor::AssertConsistency(
     const int iKFo = 0;
     if (m_iFrms[iKFo] == 0)
     {
-//#ifdef CFG_DEBUG
-#if 0
-    UT::PrintSeparator();
-    UT::Print("Origin\n");
-    UT::Print("%f + %f = %f\n", m_Ao.m_A.m_A.m00(), SAcus[iKFo].m_A.m00(),
-                                m_Ao.m_A.m_A.m00() + SAcus[iKFo].m_A.m00());
-#endif
         SAcus[iKFo] += m_Ao.m_A;
     }
     for (int iKF = 0; iKF < nKFs; ++iKF)

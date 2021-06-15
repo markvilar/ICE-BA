@@ -52,7 +52,8 @@
 namespace SIMD
 {
 
-template <class TYPE> inline TYPE* Malloc(const int N = 1)
+template <class TYPE> 
+inline TYPE* Malloc(const int N = 1)
 {
 //#ifdef __IBA_SSE__
 #ifdef _MSC_VER
@@ -66,7 +67,9 @@ template <class TYPE> inline TYPE* Malloc(const int N = 1)
     return reinterpret_cast<TYPE*>(ptr);
 #endif
 }
-template <class TYPE> inline void Free(TYPE* p)
+
+template <class TYPE> 
+inline void Free(TYPE* p)
 {
 //#ifdef __IBA_SSE__
 #ifdef _MSC_VER
@@ -75,9 +78,15 @@ template <class TYPE> inline void Free(TYPE* p)
     free(p);
 #endif
 }
-template <class TYPE> inline int Ceil(const int N) { return N; }
-template <> inline int Ceil<float>(const int N) { return SIMD_FLOAT_CEIL(N); }
-template <> inline int Ceil<double>(const int N) { return SIMD_DOUBLE_CEIL(N); }
+
+template <class TYPE> 
+inline int Ceil(const int N) { return N; }
+
+template <> 
+inline int Ceil<float>(const int N) { return SIMD_FLOAT_CEIL(N); }
+
+template <> 
+inline int Ceil<double>(const int N) { return SIMD_DOUBLE_CEIL(N); }
 
 template <class T> class aligned_allocator
 {
@@ -134,7 +143,7 @@ template <class T> class vector : public std::vector<T, aligned_allocator<T>>
 
 inline void Cross012(const xp128f& u1, const xp128f& u2, xp128f& u1xu2)
 {
-    // TODO (yanghongtian): Rooms for optimization...
+    // TODO: Rooms for optimization...
     u1xu2[0] = u1[1] * u2[2] - u1[2] * u2[1];
     u1xu2[1] = u1[2] * u2[0] - u1[0] * u2[2];
     u1xu2[2] = u1[0] * u2[1] - u1[1] * u2[0];
@@ -158,6 +167,7 @@ template <> inline void Set<float>(const int N, float* V, const float v)
 
 template <typename TYPE_SRC, typename TYPE_DST>
 inline void Convert(const int N, const TYPE_SRC* Vs, TYPE_DST* Vd);
+
 template <>
 inline void Convert<int, float>(const int N, const int* Vs, float* Vd)
 {
@@ -166,20 +176,23 @@ inline void Convert<int, float>(const int N, const int* Vs, float* Vd)
         Vd[i] = float(Vs[i]);
     }
 }
+
 template <>
 inline void Convert<float, float>(const int N, const float* Vs, float* Vd)
 {
     memcpy(Vd, Vs, sizeof(float) * N);
 }
+
 template <>
 inline void Convert<float, int>(const int N, const float* Vs, int* Vd)
 {
-    // TODO (yanghongtian) : SSE + NEON implemetation
+    // TODO: SSE + NEON implemetation
     for (int i = 0; i < N; ++i)
     {
         Vd[i] = int(Vs[i]);
     }
 }
+
 template <>
 inline void Convert<float, double>(const int N, const float* Vs, double* Vd)
 {
@@ -188,6 +201,7 @@ inline void Convert<float, double>(const int N, const float* Vs, double* Vd)
         Vd[i] = double(Vs[i]);
     }
 }
+
 template <>
 inline void Convert<double, float>(const int N, const double* Vs, float* Vd)
 {
@@ -196,6 +210,7 @@ inline void Convert<double, float>(const int N, const double* Vs, float* Vd)
         Vd[i] = float(Vs[i]);
     }
 }
+
 template <>
 inline void Convert<double, double>(const int N, const double* Vs, double* Vd)
 {
@@ -204,6 +219,7 @@ inline void Convert<double, double>(const int N, const double* Vs, double* Vd)
 
 template <typename TYPE>
 inline void Add(const int N, const TYPE* Va, const TYPE* Vb, TYPE* Vapb);
+
 template <>
 inline void Add<float>(
     const int N, const float* Va, const float* Vb, float* Vapb)
@@ -220,8 +236,12 @@ inline void Add<float>(
         Vapb[i] = Va[i] + Vb[i];
     }
 }
-template <typename TYPE> inline void Add(const int N, const TYPE* Va, TYPE* Vb);
-template <> inline void Add<float>(const int N, const float* Va, float* Vb)
+
+template <typename TYPE> 
+inline void Add(const int N, const TYPE* Va, TYPE* Vb);
+
+template <> 
+inline void Add<float>(const int N, const float* Va, float* Vb)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     const xp128f* a = (xp128f*)Va;
@@ -235,15 +255,21 @@ template <> inline void Add<float>(const int N, const float* Va, float* Vb)
         Vb[i] = Va[i] + Vb[i];
     }
 }
-template <> inline void Add<double>(const int N, const double* Va, double* Vb)
+
+template <> 
+inline void Add<double>(const int N, const double* Va, double* Vb)
 {
     for (int i = 0; i < N; ++i)
     {
         Vb[i] = Va[i] + Vb[i];
     }
 }
-template <typename TYPE> inline void Add(const int N, const TYPE a, TYPE* Vb);
-template <> inline void Add<float>(const int N, const float a, float* Vb)
+
+template <typename TYPE> 
+inline void Add(const int N, const TYPE a, TYPE* Vb);
+
+template <> 
+inline void Add<float>(const int N, const float a, float* Vb)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     const xp128f _a = xp128f::get(a);
@@ -260,6 +286,7 @@ template <> inline void Add<float>(const int N, const float a, float* Vb)
 
 template <typename TYPE>
 inline void Subtract(const int N, const TYPE* Va, const TYPE* Vb, TYPE* Vamb);
+
 template <>
 inline void Subtract<float>(
     const int N, const float* Va, const float* Vb, float* Vamb)
@@ -276,6 +303,7 @@ inline void Subtract<float>(
         Vamb[i] = Va[i] - Vb[i];
     }
 }
+
 template <>
 inline void Subtract<double>(
     const int N, const double* Va, const double* Vb, double* Vamb)
@@ -287,6 +315,7 @@ inline void Subtract<double>(
 }
 template <typename TYPE>
 inline void Subtract(const int N, const TYPE* Va, const TYPE b, TYPE* Vamb);
+
 template <>
 inline void Subtract<float>(
     const int N, const float* Va, const float b, float* Vamb)
@@ -304,6 +333,7 @@ inline void Subtract<float>(
         Vamb[i] = Va[i] - b;
     }
 }
+
 template <>
 inline void Subtract<double>(
     const int N, const double* Va, const double b, double* Vamb)
@@ -313,8 +343,10 @@ inline void Subtract<double>(
         Vamb[i] = Va[i] - b;
     }
 }
+
 template <typename TYPE>
 inline void Subtract(const int N, const TYPE* Va, TYPE* Vb);
+
 template <> inline void Subtract<float>(const int N, const float* Va, float* Vb)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
@@ -329,6 +361,7 @@ template <> inline void Subtract<float>(const int N, const float* Va, float* Vb)
         Vb[i] = Va[i] - Vb[i];
     }
 }
+
 template <>
 inline void Subtract<double>(const int N, const double* Va, double* Vb)
 {
@@ -337,9 +370,12 @@ inline void Subtract<double>(const int N, const double* Va, double* Vb)
         Vb[i] = Va[i] - Vb[i];
     }
 }
+
 template <typename TYPE>
 inline void Subtract(const int N, TYPE* Va, const TYPE* Vb);
-template <> inline void Subtract<float>(const int N, float* Va, const float* Vb)
+
+template <> 
+inline void Subtract<float>(const int N, float* Va, const float* Vb)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     xp128f* a = (xp128f*)Va;
@@ -353,6 +389,7 @@ template <> inline void Subtract<float>(const int N, float* Va, const float* Vb)
         Va[i] = Va[i] - Vb[i];
     }
 }
+
 template <>
 inline void Subtract<double>(const int N, double* Va, const double* Vb)
 {
@@ -364,7 +401,9 @@ inline void Subtract<double>(const int N, double* Va, const double* Vb)
 
 template <int SKIP>
 inline void Multiply(const int N, const xp128f& a, float* Vb);
-template <> inline void Multiply<0>(const int N, const xp128f& a, float* Vb)
+
+template <> 
+inline void Multiply<0>(const int N, const xp128f& a, float* Vb)
 {
     xp128f* b = (xp128f*)Vb;
     const int NF = SIMD_FLOAT_FLOOR(N);
@@ -377,7 +416,9 @@ template <> inline void Multiply<0>(const int N, const xp128f& a, float* Vb)
         Vb[i] *= a[0];
     }
 }
-template <> inline void Multiply<1>(const int N, const xp128f& a, float* Vb)
+
+template <> 
+inline void Multiply<1>(const int N, const xp128f& a, float* Vb)
 {
     if (N > 4)
     {
@@ -394,7 +435,9 @@ template <> inline void Multiply<1>(const int N, const xp128f& a, float* Vb)
         }
     }
 }
-template <> inline void Multiply<2>(const int N, const xp128f& a, float* Vb)
+
+template <> 
+inline void Multiply<2>(const int N, const xp128f& a, float* Vb)
 {
     if (N > 4)
     {
@@ -410,7 +453,9 @@ template <> inline void Multiply<2>(const int N, const xp128f& a, float* Vb)
         }
     }
 }
-template <> inline void Multiply<3>(const int N, const xp128f& a, float* Vb)
+
+template <> 
+inline void Multiply<3>(const int N, const xp128f& a, float* Vb)
 {
     if (N > 4)
     {
@@ -422,6 +467,7 @@ template <> inline void Multiply<3>(const int N, const xp128f& a, float* Vb)
         Vb[3] *= a[0];
     }
 }
+
 inline void Multiply(const int i, const int N, const xp128f& a, float* Vb)
 {
     switch (i)
@@ -455,6 +501,7 @@ inline void Multiply(const int i, const int N, const xp128f& a, float* Vb)
     }
     }
 }
+
 inline void Multiply(const int i, const int N, const float a, float* Vb)
 {
     const xp128f _a = xp128f::get(a);
@@ -463,6 +510,7 @@ inline void Multiply(const int i, const int N, const float a, float* Vb)
 
 template <typename TYPE>
 inline void Multiply(const int N, const TYPE* Va, const TYPE* Vb, TYPE* Vab);
+
 template <>
 inline void Multiply<float>(
     const int N, const float* Va, const float* Vb, float* Vab)
@@ -479,6 +527,7 @@ inline void Multiply<float>(
         Vab[i] = Va[i] * Vb[i];
     }
 }
+
 template <>
 inline void Multiply<double>(
     const int N, const double* Va, const double* Vb, double* Vab)
@@ -491,7 +540,9 @@ inline void Multiply<double>(
 
 template <typename TYPE>
 inline void Multiply(const int N, const TYPE a, TYPE* Vb);
-template <> inline void Multiply<float>(const int N, const float a, float* Vb)
+
+template <> 
+inline void Multiply<float>(const int N, const float a, float* Vb)
 {
     if (a == 1.0f)
     {
@@ -500,6 +551,7 @@ template <> inline void Multiply<float>(const int N, const float a, float* Vb)
     const xp128f _a = xp128f::get(a);
     Multiply<0>(N, _a, Vb);
 }
+
 template <>
 inline void Multiply<double>(const int N, const double a, double* Vb)
 {
@@ -515,6 +567,7 @@ inline void Multiply<double>(const int N, const double a, double* Vb)
 
 template <typename TYPE>
 inline void Multiply(const int N, const TYPE* Va, TYPE* Vb);
+
 template <> inline void Multiply<float>(const int N, const float* Va, float* Vb)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
@@ -533,6 +586,7 @@ template <> inline void Multiply<float>(const int N, const float* Va, float* Vb)
 template <typename TYPE_A, typename TYPE_B>
 inline void Multiply(
     const int N, const TYPE_A a, const TYPE_B* Vb, TYPE_A* Vab);
+
 inline void Multiply(const int N, const xp128f& a, const float* Vb, float* Vab)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
@@ -547,6 +601,7 @@ inline void Multiply(const int N, const xp128f& a, const float* Vb, float* Vab)
         Vab[i] = a[0] * Vb[i];
     }
 }
+
 template <>
 inline void Multiply<float, float>(
     const int N, const float a, const float* Vb, float* Vab)
@@ -559,6 +614,7 @@ inline void Multiply<float, float>(
     const xp128f _a = xp128f::get(a);
     Multiply(N, _a, Vb, Vab);
 }
+
 template <>
 inline void Multiply<double, double>(
     const int N, const double a, const double* Vb, double* Vab)
@@ -577,6 +633,7 @@ inline void Multiply<double, double>(
 template <int SKIP>
 inline void MultiplyAddTo(
     const int N, const xp128f& a, const float* Vb, float* Vab);
+
 template <>
 inline void MultiplyAddTo<0>(
     const int N, const xp128f& a, const float* Vb, float* Vab)
@@ -689,6 +746,7 @@ inline void MultiplyAddTo(
     const xp128f _a = xp128f::get(a);
     MultiplyAddTo(0, N, _a, Vb, Vab);
 }
+
 inline void MultiplyAddTo(
     const int i, const int N, const float a, const float* Vb, float* Vab)
 {
@@ -699,6 +757,7 @@ inline void MultiplyAddTo(
 template <typename TYPE>
 inline void MultiplyAddTo(
     const int N, const TYPE* Va, const TYPE* Vb, TYPE* Vab);
+
 template <>
 inline void MultiplyAddTo<float>(
     const int N, const float* Va, const float* Vb, float* Vab)
@@ -716,8 +775,11 @@ inline void MultiplyAddTo<float>(
     }
 }
 
-template <int SKIP> inline void Minus(const int N, float* V);
-template <> inline void Minus<0>(const int N, float* V)
+template <int SKIP> 
+inline void Minus(const int N, float* V);
+
+template <> 
+inline void Minus<0>(const int N, float* V)
 {
     const xp128f zero = xp128f::get(0.f);
     const int NF = SIMD_FLOAT_FLOOR(N);
@@ -731,7 +793,9 @@ template <> inline void Minus<0>(const int N, float* V)
         V[i] = -V[i];
     }
 }
-template <> inline void Minus<1>(const int N, float* V)
+
+template <> 
+inline void Minus<1>(const int N, float* V)
 {
     if (N > 4)
     {
@@ -748,7 +812,9 @@ template <> inline void Minus<1>(const int N, float* V)
         }
     }
 }
-template <> inline void Minus<2>(const int N, float* V)
+
+template <> 
+inline void Minus<2>(const int N, float* V)
 {
     if (N > 4)
     {
@@ -764,7 +830,9 @@ template <> inline void Minus<2>(const int N, float* V)
         }
     }
 }
-template <> inline void Minus<3>(const int N, float* V)
+
+template <> 
+inline void Minus<3>(const int N, float* V)
 {
     if (N > 4)
     {
@@ -776,6 +844,7 @@ template <> inline void Minus<3>(const int N, float* V)
         V[3] = -V[3];
     }
 }
+
 inline void Minus(const int i, const int N, float* V)
 {
     switch (i)
@@ -809,9 +878,15 @@ inline void Minus(const int i, const int N, float* V)
     }
     }
 }
-template <typename TYPE> inline void Minus(const int N, TYPE* V);
-template <> inline void Minus<float>(const int N, float* V) { Minus<0>(N, V); }
-template <> inline void Minus<double>(const int N, double* V)
+
+template <typename TYPE> 
+inline void Minus(const int N, TYPE* V);
+
+template <> 
+inline void Minus<float>(const int N, float* V) { Minus<0>(N, V); }
+
+template <> 
+inline void Minus<double>(const int N, double* V)
 {
     for (int i = 0; i < N; ++i)
     {
@@ -853,8 +928,11 @@ inline void Inverse(const int N, float* V, const float s = 1.0f,
     }
 }
 
-template <typename TYPE> inline TYPE Sum(const int N, const TYPE* V);
-template <> inline float Sum<float>(const int N, const float* V)
+template <typename TYPE> 
+inline TYPE Sum(const int N, const TYPE* V);
+
+template <> 
+inline float Sum<float>(const int N, const float* V)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     xp128f S = xp128f::get(0.0f);
@@ -872,7 +950,9 @@ template <> inline float Sum<float>(const int N, const float* V)
 
 template <typename TYPE>
 inline TYPE Sum(const int i1, const int i2, const TYPE* V);
-template <> inline float Sum<float>(const int i1, const int i2, const float* V)
+
+template <> 
+inline float Sum<float>(const int i1, const int i2, const float* V)
 {
     if (i2 - i1 < 4)
     {
@@ -891,14 +971,18 @@ template <> inline float Sum<float>(const int i1, const int i2, const float* V)
     }
     return S;
 }
-template <typename TYPE> inline TYPE Mean(const int N, const TYPE* V)
+
+template <typename TYPE> 
+inline TYPE Mean(const int N, const TYPE* V)
 {
     return N == 0 ? 0 : Sum(N, V) / N;
 }
 
 template <typename TYPE>
 inline TYPE Variance(const int N, const TYPE* V, const TYPE u);
-template <> inline float Variance(const int N, const float* V, const float u)
+
+template <> 
+inline float Variance(const int N, const float* V, const float u)
 {
     const xp128f _u = xp128f::get(u);
     xp128f d, Sd2 = xp128f::get(0.0f);
@@ -917,15 +1001,21 @@ template <> inline float Variance(const int N, const float* V, const float u)
     return Sd2.vsum_all() / N;
 }
 
-template <typename TYPE> inline TYPE Variance(const int N, const TYPE* V)
+template <typename TYPE> 
+inline TYPE Variance(const int N, const TYPE* V)
 {
     const TYPE u = Mean(N, V);
     return Variance(N, V, u);
 }
 
-template <typename TYPE> inline TYPE Maximal(const int N, const TYPE* V);
-template <typename TYPE> inline TYPE Minimal(const int N, const TYPE* V);
-template <> inline float Maximal<float>(const int N, const float* V)
+template <typename TYPE> 
+inline TYPE Maximal(const int N, const TYPE* V);
+
+template <typename TYPE> 
+inline TYPE Minimal(const int N, const TYPE* V);
+
+template <> 
+inline float Maximal<float>(const int N, const float* V)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     xp128f m = xp128f::get(-FLT_MAX);
@@ -941,7 +1031,9 @@ template <> inline float Maximal<float>(const int N, const float* V)
     }
     return max_val;
 }
-template <> inline float Minimal<float>(const int N, const float* V)
+
+template <> 
+inline float Minimal<float>(const int N, const float* V)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     xp128f m = xp128f::get(FLT_MAX);
@@ -960,7 +1052,9 @@ template <> inline float Minimal<float>(const int N, const float* V)
 
 template <int SKIP>
 inline float Dot(const int N, const float* Va, const float* Vb);
-template <> inline float Dot<0>(const int N, const float* Va, const float* Vb)
+
+template <> 
+inline float Dot<0>(const int N, const float* Va, const float* Vb)
 {
     xp128f d = xp128f::get(0.0f);
     const xp128f *a = (xp128f*)Va, *b = (xp128f*)Vb;
@@ -975,7 +1069,9 @@ template <> inline float Dot<0>(const int N, const float* Va, const float* Vb)
     }
     return d.vsum_all();
 }
-template <> inline float Dot<1>(const int N, const float* Va, const float* Vb)
+
+template <> 
+inline float Dot<1>(const int N, const float* Va, const float* Vb)
 {
     if (N > 4)
     {
@@ -992,7 +1088,9 @@ template <> inline float Dot<1>(const int N, const float* Va, const float* Vb)
         return d;
     }
 }
-template <> inline float Dot<2>(const int N, const float* Va, const float* Vb)
+
+template <> 
+inline float Dot<2>(const int N, const float* Va, const float* Vb)
 {
     if (N > 4)
     {
@@ -1008,7 +1106,9 @@ template <> inline float Dot<2>(const int N, const float* Va, const float* Vb)
         return d;
     }
 }
-template <> inline float Dot<3>(const int N, const float* Va, const float* Vb)
+
+template <> 
+inline float Dot<3>(const int N, const float* Va, const float* Vb)
 {
     if (N > 4)
     {
@@ -1023,6 +1123,7 @@ template <> inline float Dot<3>(const int N, const float* Va, const float* Vb)
         return 0.0f;
     }
 }
+
 inline float Dot(const int i, const int N, const float* Va, const float* Vb)
 {
     switch (i)
@@ -1048,6 +1149,7 @@ inline float Dot(const int i, const int N, const float* Va, const float* Vb)
     }
     }
 }
+
 template <int SKIP>
 inline double Dot(const int N, const double* Va, const double* Vb)
 {
@@ -1059,8 +1161,11 @@ inline double Dot(const int N, const double* Va, const double* Vb)
     return d;
 }
 
-template <typename TYPE> inline TYPE SquaredLength(const int N, const TYPE* V);
-template <> inline float SquaredLength(const int N, const float* V)
+template <typename TYPE> 
+inline TYPE SquaredLength(const int N, const TYPE* V);
+
+template <> 
+inline float SquaredLength(const int N, const float* V)
 {
     xp128f s = xp128f::get(0.0f);
     const xp128f* v = (xp128f*)V;
@@ -1077,8 +1182,11 @@ template <> inline float SquaredLength(const int N, const float* V)
     return sum_val;
 }
 
-template <typename TYPE> inline void Square(const int N, TYPE* V);
-template <> inline void Square(const int N, float* V)
+template <typename TYPE> 
+inline void Square(const int N, TYPE* V);
+
+template <> 
+inline void Square(const int N, float* V)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     xp128f* v = (xp128f*)V;
@@ -1092,8 +1200,11 @@ template <> inline void Square(const int N, float* V)
     }
 }
 
-template <typename TYPE> inline void SquareRoot(const int N, TYPE* V);
-template <> inline void SquareRoot(const int N, float* V)
+template <typename TYPE> 
+inline void SquareRoot(const int N, TYPE* V);
+
+template <> 
+inline void SquareRoot(const int N, float* V)
 {
     const int NF = SIMD_FLOAT_FLOOR(N);
     xp128f* v = (xp128f*)V;

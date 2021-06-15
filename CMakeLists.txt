@@ -39,7 +39,7 @@ project(ICE_BA)
 
 set(CMAKE_BUILD_TYPE Release)
 option(ICE_BA_BUILD_FRONTEND "Build frontend." OFF)
-option(ICE_BA_BUILD_APP "Build application." OFF)
+option(ICE_BA_BUILD_APP "Build application." ON)
 
 # -----------------------------------------------------------------------------
 # ---- Compiler flags ---------------------------------------------------------
@@ -52,18 +52,19 @@ if(CYGWIN)
 else()
 	# NEON or SSE
 	if((CMAKE_SYSTEM_PROCESSOR MATCHES "^arm"))
-		set(CMAKE_CXX_FLAGS "-D__ARM_NEON__ -DENABLE_NEON -mfloat-abi=hard -mfpu=neon -Ofast -std=c++11 -Wno-unused-result")
+		set(CMAKE_CXX_FLAGS "-D__ARM_NEON__ -DENABLE_NEON -mfloat-abi=hard
+        -mfpu=neon -Ofast -std=c++17 -Wno-unused-result")
 		message("Enabling neon for armv7 " ${CMAKE_CXX_FLAGS})
 	elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch64")
 		set(CMAKE_CXX_FLAGS 
-            "-D__ARM_NEON__ -DENABLE_NEON -Ofast -std=c++11 -Wno-unused-result")
+            "-D__ARM_NEON__ -DENABLE_NEON -Ofast -std=c++17 -Wno-unused-result")
 		message("Detected armv8 " ${CMAKE_CXX_FLAGS})
 	else()
 		# SSE4.1 seems to be not supported by GCC 4.8.4
 		# TODO: See if we still need sse4.1
 		message(STATUS "Enable SSE2 and SSE4.1")
 		set(CMAKE_CXX_FLAGS 
-            "${CMAKE_CXX_FLAGS} -std=c++11 -msse2 -msse4.1 -Wno-unused-result")
+            "${CMAKE_CXX_FLAGS} -std=c++17 -msse2 -msse4.1 -Wno-unused-result")
 		# Export compile_commands.json
 		set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 	endif()

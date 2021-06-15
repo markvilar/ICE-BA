@@ -179,33 +179,6 @@ BundleAdjustment/GlobalBundleAdjustorDL.cpp.s:
 	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDL.cpp.s
 .PHONY : BundleAdjustment/GlobalBundleAdjustorDL.cpp.s
 
-BundleAdjustment/GlobalBundleAdjustorDebug.o: BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o
-
-.PHONY : BundleAdjustment/GlobalBundleAdjustorDebug.o
-
-# target to build an object file
-BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o:
-	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o
-.PHONY : BundleAdjustment/GlobalBundleAdjustorDebug.cpp.o
-
-BundleAdjustment/GlobalBundleAdjustorDebug.i: BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i
-
-.PHONY : BundleAdjustment/GlobalBundleAdjustorDebug.i
-
-# target to preprocess a source file
-BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i:
-	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i
-.PHONY : BundleAdjustment/GlobalBundleAdjustorDebug.cpp.i
-
-BundleAdjustment/GlobalBundleAdjustorDebug.s: BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s
-
-.PHONY : BundleAdjustment/GlobalBundleAdjustorDebug.s
-
-# target to generate assembly for a file
-BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s:
-	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s
-.PHONY : BundleAdjustment/GlobalBundleAdjustorDebug.cpp.s
-
 BundleAdjustment/GlobalBundleAdjustorGN.o: BundleAdjustment/GlobalBundleAdjustorGN.cpp.o
 
 .PHONY : BundleAdjustment/GlobalBundleAdjustorGN.o
@@ -313,33 +286,6 @@ BundleAdjustment/LocalBundleAdjustorDL.s: BundleAdjustment/LocalBundleAdjustorDL
 BundleAdjustment/LocalBundleAdjustorDL.cpp.s:
 	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDL.cpp.s
 .PHONY : BundleAdjustment/LocalBundleAdjustorDL.cpp.s
-
-BundleAdjustment/LocalBundleAdjustorDebug.o: BundleAdjustment/LocalBundleAdjustorDebug.cpp.o
-
-.PHONY : BundleAdjustment/LocalBundleAdjustorDebug.o
-
-# target to build an object file
-BundleAdjustment/LocalBundleAdjustorDebug.cpp.o:
-	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.o
-.PHONY : BundleAdjustment/LocalBundleAdjustorDebug.cpp.o
-
-BundleAdjustment/LocalBundleAdjustorDebug.i: BundleAdjustment/LocalBundleAdjustorDebug.cpp.i
-
-.PHONY : BundleAdjustment/LocalBundleAdjustorDebug.i
-
-# target to preprocess a source file
-BundleAdjustment/LocalBundleAdjustorDebug.cpp.i:
-	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.i
-.PHONY : BundleAdjustment/LocalBundleAdjustorDebug.cpp.i
-
-BundleAdjustment/LocalBundleAdjustorDebug.s: BundleAdjustment/LocalBundleAdjustorDebug.cpp.s
-
-.PHONY : BundleAdjustment/LocalBundleAdjustorDebug.s
-
-# target to generate assembly for a file
-BundleAdjustment/LocalBundleAdjustorDebug.cpp.s:
-	cd /home/martin/Develop/ICE-BA/build && $(MAKE) -f Backend/CMakeFiles/IBA.dir/build.make Backend/CMakeFiles/IBA.dir/BundleAdjustment/LocalBundleAdjustorDebug.cpp.s
-.PHONY : BundleAdjustment/LocalBundleAdjustorDebug.cpp.s
 
 BundleAdjustment/LocalBundleAdjustorGN.o: BundleAdjustment/LocalBundleAdjustorGN.cpp.o
 
@@ -761,9 +707,6 @@ help:
 	@echo "... BundleAdjustment/GlobalBundleAdjustorDL.o"
 	@echo "... BundleAdjustment/GlobalBundleAdjustorDL.i"
 	@echo "... BundleAdjustment/GlobalBundleAdjustorDL.s"
-	@echo "... BundleAdjustment/GlobalBundleAdjustorDebug.o"
-	@echo "... BundleAdjustment/GlobalBundleAdjustorDebug.i"
-	@echo "... BundleAdjustment/GlobalBundleAdjustorDebug.s"
 	@echo "... BundleAdjustment/GlobalBundleAdjustorGN.o"
 	@echo "... BundleAdjustment/GlobalBundleAdjustorGN.i"
 	@echo "... BundleAdjustment/GlobalBundleAdjustorGN.s"
@@ -776,9 +719,6 @@ help:
 	@echo "... BundleAdjustment/LocalBundleAdjustorDL.o"
 	@echo "... BundleAdjustment/LocalBundleAdjustorDL.i"
 	@echo "... BundleAdjustment/LocalBundleAdjustorDL.s"
-	@echo "... BundleAdjustment/LocalBundleAdjustorDebug.o"
-	@echo "... BundleAdjustment/LocalBundleAdjustorDebug.i"
-	@echo "... BundleAdjustment/LocalBundleAdjustorDebug.s"
 	@echo "... BundleAdjustment/LocalBundleAdjustorGN.o"
 	@echo "... BundleAdjustment/LocalBundleAdjustorGN.i"
 	@echo "... BundleAdjustment/LocalBundleAdjustorGN.s"

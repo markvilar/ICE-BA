@@ -14,9 +14,6 @@
  * limitations under the License.
  *****************************************************************************/
 #include "stdafx.h"
-//#ifndef CFG_DEBUG
-//#define CFG_DEBUG
-//#endif
 #include "GlobalBundleAdjustor.h"
 
 #if defined WIN32 && defined CFG_DEBUG && defined CFG_GROUND_TRUTH
@@ -49,9 +46,6 @@ void GlobalBundleAdjustor::SolveDogLeg()
     {
         LA::AlignedVectorXf::AmB(m_xsGN, m_xsGD, m_xsDL);
         const float d = m_xsGD.Dot(m_xsDL), dx2 = m_xsDL.SquaredLength();
-        // m_beta = static_cast<float>((-d + sqrt(static_cast<double>(d) * d +
-        //                            (m_delta2 - m_x2GD) *
-        //                            static_cast<double>(dx2))) / dx2);
         m_beta = (-d + sqrtf(d * d + (m_delta2 - m_x2GD) * dx2)) / dx2;
         m_xsDL *= m_beta;
         m_xsDL += m_xsGD;
@@ -158,11 +152,6 @@ void GlobalBundleAdjustor::SolveGradientDescent()
             const FTR::Factor::DDC& Sadx = KF.m_Axs[ix].m_Sadx;
             gcd.v6() = gds[ix];
             Agds[ix] = Sadx.m_adcd.Dot(gcd);
-//#ifdef CFG_DEBUG
-#if 0
-      if (m_iIter == 1 && ic == 0)
-        UT::Print("%d: %e * %e + %e = %e\n", ix, gds[ix], Sadx.m_adc.v0(), Agc.v0(), gds[ix] * Sadx.m_adc.v0() + Agc.v0());
-#endif
             LA::AlignedVector6f::AddsaTo(gds[ix], Sadx.m_adcA, Agc);
         }
         Agc.Get(Agcs[ic]);
@@ -209,13 +198,6 @@ void GlobalBundleAdjustor::SolveGradientDescent()
     const float xl = m_bl / m_gTAg;
     m_xsGD *= -xl;
     m_x2GD = xl * xl;
-//#ifdef CFG_DEBUG
-#if 0
-  if (m_debug) {
-    const float x2GD = m_xsGD.SquaredLength();
-    UT::AssertEqual(x2GD, m_x2GD);
-  }
-#endif
 }
 
 void GlobalBundleAdjustor::ComputeReduction()
@@ -242,12 +224,6 @@ void GlobalBundleAdjustor::ComputeReduction()
 
 void GlobalBundleAdjustor::ComputeReductionFeature()
 {
-//#ifdef CFG_DEBUG
-#if 0
-  UT::DebugStart();
-  UT::DebugStop();
-  return;
-#endif
     float dFa, dFp;
     Rigid3D Tr[2];
     FTR::Reduction Ra, Rp;
@@ -312,14 +288,6 @@ void GlobalBundleAdjustor::ComputeReductionFeature()
         }
         m_dFa = dFa + m_dFa;
         m_dFp = dFp + m_dFp;
-//#ifdef CFG_DEBUG
-#if 0
-    if (UT::Debugging() && m_iIter == 0) {
-      if (iKF == 0)
-        UT::PrintSeparator();
-      UT::Print("%d %e\n", iKF, dFa);
-    }
-#endif
     }
 }
 
@@ -821,7 +789,6 @@ bool GlobalBundleAdjustor::UpdateStatesPropose()
         {
             continue;
         }
-        // m_ucs[iKF] &= ~GBA_FLAG_FRAME_UPDATE_BACK_SUBSTITUTION;
         const int iX = m_iKF2X[iKF];
         Depth::InverseGaussian *ds = m_ds.data() + id,
                                *dsBkp = m_dsBkp.data() + iX;
@@ -833,7 +800,6 @@ bool GlobalBundleAdjustor::UpdateStatesPropose()
             {
                 continue;
             }
-            // uds[ix] &= ~GBA_FLAG_TRACK_UPDATE_BACK_SUBSTITUTION;
 #ifdef CFG_VERBOSE
             if (m_verbose >= 3)
             {
@@ -853,20 +819,6 @@ bool GlobalBundleAdjustor::UpdateStatesPropose()
             d.u() = xds[ix] + d.u();
             d.s2() = DEPTH_VARIANCE_EPSILON +
                      KF.m_Mxs1[ix].m_mdx.m_add.m_a * BA_WEIGHT_FEATURE;
-            // if (!d.Valid()) {
-            //  d = dsBkp[ix];
-            //  continue;
-            //}
-            // d.u() = UT_CLAMP(d.u(), DEPTH_MIN, DEPTH_MAX);
-            // d.u() = UT_CLAMP(d.u(), DEPTH_EPSILON, DEPTH_MAX);
-            // if (d.u() < DEPTH_EPSILON) {
-            //  d.u() = DEPTH_EPSILON;
-            //} else if (d.u() > DEPTH_MAX) {
-            //  d.u() = KF.m_d.u();
-            //}
-            // if (!d.Valid()) {
-            //  d.u() = KF.m_d.u();
-            //}
             m_axds.Push(axd);
             m_ucs[iKF] |= GBA_FLAG_FRAME_UPDATE_DEPTH;
             uds[ix] |= GBA_FLAG_TRACK_UPDATE_DEPTH;

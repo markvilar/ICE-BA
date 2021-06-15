@@ -105,5 +105,5 @@ protected:
     std::vector<int> m_iKF2d;
     ubyte m_Uc;
     std::vector<ubyte> m_uds;
-    boost::shared_mutex m_MT;
+    std::mutex m_MT;
 };

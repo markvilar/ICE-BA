@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(euroc_tracking)
 
 list(FIND OpenCV_LIBS "opencv_viz" find_index)
 if (find_index GREATER -1)
@@ -13,8 +12,6 @@ find_package(Glog REQUIRED)
 find_package(GFlags REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(Yaml REQUIRED)
-
-#include_directories (${GLOG_INCLUDE_DIR})
 
 set(HEADERS
 	cameras/CameraBase.hpp
@@ -60,11 +57,11 @@ set(SOURCES
     CameraBase.cpp
     xp_quaternion.cc)
 
-add_library(OF SHARED ${SOURCES})
+add_library(OpticalFlow SHARED ${SOURCES})
 
 add_subdirectory(vendor)
 
-target_include_directories(OF PUBLIC
+target_include_directories(OpticalFlow PUBLIC
     ${GFLAGS_INCLUDE_DIR}
     ${OpenCV_INCLUDE_DIR}
     ${YAMLCPP_INCLUDE_DIR}
@@ -72,7 +69,7 @@ target_include_directories(OF PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/cameras
 	${CMAKE_CURRENT_SOURCE_DIR}/vendor/brisk/include)
 
-target_link_libraries(OF
+target_link_libraries(OpticalFlow PUBLIC
     ${GFLAGS_LIBRARIES}
     ${OpenCV_LIBS}
     ${YAMLCPP_LIBRARIES}
